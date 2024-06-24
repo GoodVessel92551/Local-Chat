@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Test</title>
+</head>
+<body>
+    <input id="input"><button id="button">Enter</button>
+    <p id="output"></p>
+    <script>
+        const input = document.getElementById("input");
+        const button = document.getElementById("button");
+        const output = document.getElementById("output");
+        window.addEventListener("load", async () => {
+            const hasAI = window.ai != null;
+            const hasNano =
+                (hasAI && (await window.ai.canCreateTextSession())) === "readily";
+            if (!hasNano) {
+                console.log("No AI")
+            } else {
+                const model = await window.ai.createTextSession();
+                let asking = false;
+                button.addEventListener("click", async () => {
+                    if (asking) return;
+                    asking = true;
+                    input.disabled = true;
+                    const prompt = input.value;
+                    const stream = model.promptStreaming(prompt);
+                    for await (const response of stream) {
+                        output.textContent = response;
+                    }
+                    input.disabled = false;
+                    asking = false;
+                })
+            }
+        })
+    </script>
+</body>
+</html>
