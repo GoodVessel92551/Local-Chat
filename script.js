@@ -6,6 +6,7 @@ const welcome = document.getElementById("welcome");
 const logo = document.getElementById("logo");
 const clear_button = document.getElementById("clear_button");
 
+let running = false;
 let message_id = 0;
 let called = false;
 let messages = [];
@@ -50,7 +51,7 @@ const start_chat = () => {
 }
 input.addEventListener("input", () => {
     called = false
-    if (input.value == "") {
+    if (input.value == "" || running == true) {
         send_button.disabled = true
     } else {
         send_button.disabled = false
@@ -59,8 +60,10 @@ input.addEventListener("input", () => {
 })
 input.addEventListener("keyup", (event) => {
     if (event.keyCode === 13) {
-        event.preventDefault();
-        sendMessage(document.getElementById('user-input').value)
+        if (send_button.disabled == false) {
+            event.preventDefault();
+            sendMessage(document.getElementById('user-input').value)
+        }
     } else if ((event.keyCode === 8 && called == true) || (event.keyCode === 8 && input.value == "")) {
         called = false
     }
@@ -81,6 +84,7 @@ const sendMessage = (prompt) => {
 }
 
 const ai_call = async (userInput, messages) => {
+    running = true;
     let tokens = 0;
     let startTime = new Date();
     const prompt = input.value;
@@ -167,6 +171,12 @@ const ai_call = async (userInput, messages) => {
     let tokens_sec = tokens / (timeTaken / 1000);
     speed.style.display = "block";
     speed.textContent = `${timeTaken} ms`;
+    running = false;
+    if (input.value == "") {
+        send_button.disabled = true
+    }else{
+        send_button.disabled = false
+    }
     document.getElementById("speed").innerText = tokens_sec.toFixed(2) + " tok/s";
     if (timeTaken != undefined) {
         document.getElementById("time_speed").innerText = (timeTaken / 1000) + " sec";
