@@ -414,38 +414,6 @@ h1{
     fill: #8fadff;
 }
 
-.genning{
-    background:linear-gradient(to right, #f28fff, #d000fa) !important;
-    -webkit-background-clip: text !important;
-    background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
-}
-
-.genning > svg > path{
-    fill: #f28fff !important;
-}
-
-.genning > svg{
-    width: 16px;
-    height: 16px;
-}
-
-.done{
-    background:linear-gradient(to right, #8fffa2, #00fa21) !important;
-    -webkit-background-clip: text !important;
-    background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
-}
-
-.done > svg> path{
-    fill: #8fffa2 !important;
-}
-
-.done > svg{
-    width: 16px;
-    height: 16px;
-}
-
 .search_URL{
     background: #27282B;
     border: 1px solid #333539;
@@ -598,4 +566,50 @@ table{
     .bottom_text_local{
         display: none;
     }
+}
+
+.position{
+    margin-left: 40px;
+    display: flex;
+    gap:8px;
+    align-items: center;
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+.position > svg{
+    width: 18px;
+    height: 18px;
+}
+
+.position > svg > path{
+    width: 16px;
+    height: 16px;
+    fill: #8fadff;
+}
+
+.genning{
+    color:#EE5FBD !important;
+}
+
+.genning > svg > path{
+    fill: #EE5FBD !important;
+}
+
+.genning > svg{
+    width: 18px;
+    height: 18px;
+}
+
+.done{
+    color:#84EE5F !important;
+}
+
+.done > svg> path{
+    fill: #84EE5F !important;
+}
+
+.done > svg{
+    width: 18px;
+    height: 18px;
 }
