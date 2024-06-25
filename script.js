@@ -66,7 +66,6 @@ input.addEventListener("keyup", (event) => {
         event.preventDefault();
         sendMessage(document.getElementById('user-input').value)
     } else if ((event.keyCode === 8 && called == true) || (event.keyCode === 8 && input.value == "")) {
-        call("none")
         called = false
     }
 });
@@ -150,12 +149,10 @@ const ai_call = async (userInput, messages) => {
 
     for await (const response of stream) {
         script.textContent = response;
-        console.log(response)
         tokens += 1;
         total = response;
         scrollToBottom()
     }
-
     messages.push({ "role": "assistant", "content": total });
     let endTime = new Date();
     let timeTaken = endTime - startTime;
