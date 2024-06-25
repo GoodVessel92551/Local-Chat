@@ -1087,6 +1087,15 @@ table{
     cursor: pointer;
 }
 
+.ai_guide a:hover{
+    color: #9caeff;
+}
+
+.ai_guide a:focus{
+    outline: none;
+    color: #9caeff;
+}
+
 .ai_guide h2{
     font-size: 24px;
     margin:0;
