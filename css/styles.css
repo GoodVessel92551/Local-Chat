@@ -596,11 +596,11 @@ table{
 }
 
 .genning{
-    color:#EE5FBD !important;
+    color:#CF82D1 !important;
 }
 
 .genning > svg > path{
-    fill: #EE5FBD !important;
+    fill: #CF82D1 !important;
 }
 
 .genning > svg{
@@ -610,11 +610,11 @@ table{
 }
 
 .done{
-    color:#84EE5F !important;
+    color:#84D182 !important;
 }
 
 .done > svg> path{
-    fill: #84EE5F !important;
+    fill: #84D182 !important;
 }
 
 .done > svg{
