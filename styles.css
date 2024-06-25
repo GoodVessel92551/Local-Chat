@@ -574,7 +574,7 @@ table{
     gap:8px;
     align-items: center;
     font-size: 14px;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
 }
 
 .position > svg{
@@ -588,6 +588,12 @@ table{
     fill: #8fadff;
 }
 
+@keyframes genning {
+    0%{transform: scale(1.2) rotate(10deg);}
+    50%{transform: scale(1) rotate(-10deg);}
+    100%{transform: scale(1.2) rotate(10deg);}
+}
+
 .genning{
     color:#EE5FBD !important;
 }
@@ -599,6 +605,7 @@ table{
 .genning > svg{
     width: 18px;
     height: 18px;
+    animation: genning 1s infinite;
 }
 
 .done{

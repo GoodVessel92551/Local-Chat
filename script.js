@@ -20,7 +20,7 @@ window.addEventListener("load", async () => {
         (hasAI && (await window.ai.canCreateTextSession())) === "readily";
     
     if (!hasNano) {
-        ai_guide.showModal();
+        window.location.href = "/guide.html"
         return;
     }
     model = await window.ai.createTextSession();
