@@ -1,3 +1,6 @@
+
+
+
 const message_container = document.getElementById("message-container");
 const close_button = document.getElementById("close_button");
 const send_button = document.getElementById("send_button");
@@ -10,14 +13,24 @@ let message_id = 0;
 let called = false;
 let messages = [];
 let model = null;
-
+const ai_guide = document.getElementById('ai_guide');
+console.log(ai_guide)
 
 
 window.addEventListener("load", async () => {
+    const hasAI = window.ai != null;
+    
+    const hasNano =
+        (hasAI && (await window.ai.canCreateTextSession())) === "readily";
+    
+    if (!hasNano) {
+        ai_guide.showModal();
+        return;
+    }
     model = await window.ai.createTextSession();
 })
 
-const scrollToBottom =() => {
+const scrollToBottom = () => {
     message_container.scrollTop = message_container.scrollHeight;
 }
 const clear = () => {
@@ -119,7 +132,7 @@ const ai_call = async (userInput, messages) => {
 
     zeroMd.appendChild(template);
     zeroMd.appendChild(script);
-    
+
     p.id = "message_" + message_id
     message_id++
     let messageDiv = document.createElement("div");
@@ -152,7 +165,7 @@ const ai_call = async (userInput, messages) => {
     console.log(`Tokens: ${tokens}`);
     document.getElementById("speed").innerText = tokens_sec.toFixed(2) + " tok/s"
     if (timeTaken != undefined) {
-        document.getElementById("time_speed").innerText = (timeTaken/1000) + " sec"
+        document.getElementById("time_speed").innerText = (timeTaken / 1000) + " sec"
         document.getElementById("time_speed").style.display = "block"
     }
 }

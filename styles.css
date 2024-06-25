@@ -1069,3 +1069,47 @@ table{
     margin-right:-8px;
     display: none;
 }
+
+.ai_guide{
+    width:700px;
+    padding: 0px;
+    border:none;
+    border-radius: 32px;
+    overflow: hidden;
+    background-color: #282D33;
+    animation: view_image_load .4s;
+    padding:32px;
+    color:#f0f0f0;
+}
+
+.ai_guide a{
+    color: #b5c3ff;
+    cursor: pointer;
+}
+
+.ai_guide h2{
+    font-size: 24px;
+    margin:0;
+
+}
+
+.ai_guide p{
+    margin:4px;
+    color: #d8d8d8;
+    font-size: 14px;
+}
+
+.ai_guide li{
+    margin:6px;
+    color: #f0f0f0;
+    font-size: 15px;
+}
+
+.ai_guide:focus{
+    outline: none;
+}
+
+.ai_guide::backdrop{
+    background-color: #000000bd;
+    transition: .4;
+}
