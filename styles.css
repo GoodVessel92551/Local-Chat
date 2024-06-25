@@ -95,6 +95,7 @@ h1{
     gap:32px;
     max-height: 80%;
     overflow-y: scroll;
+    padding:0px 8px;
 }
 
 .lower_buttons{
