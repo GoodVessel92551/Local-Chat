@@ -118,12 +118,22 @@ h1{
 }
 
 
+.bottom_text > .speed{
+    float: right;
+    display: none;
+}
+
 .bottom_text_local{
     position: absolute;
     left:50%;
     bottom:0px;
     transform: translateX(-50%);
     
+}
+
+.time_speed{
+    float: left;
+    display: none;
 }
 
 .lower_buttons > .buttons{
