@@ -51,6 +51,7 @@ const start_chat = () => {
 }
 input.addEventListener("input", () => {
     called = false
+
     if (input.value == "" || running == true) {
         send_button.disabled = true
     } else {
@@ -94,6 +95,12 @@ const ai_call = async (userInput, messages) => {
     let name_type = document.createElement("type");
     let p = document.createElement("p");
     var position = document.createElement("span");
+    var link = document.createElement("link");
+    var link2 = document.createElement("link");
+    link.rel = "stylesheet";
+    link2.rel = "stylesheet";
+    link.href = "https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown-dark.min.css";
+    link2.href = "https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11/styles/github-dark.min.css";
     position.id = "position_"+message_id
     position.classList.add("position")
     const zeroMd = document.createElement('zero-md');
@@ -111,8 +118,8 @@ const ai_call = async (userInput, messages) => {
         border-radius: 16px !important;
         height: auto !important;
         width: auto !important;
-        background-color: none !important;
-        border: 1px solid none !important;
+        background-color: transparent  !important;
+        border: 1px solid transparent  !important;
         margin-left: 40px !important;
         font-family: "Manrope", sans-serif !important;
     }
@@ -127,7 +134,8 @@ const ai_call = async (userInput, messages) => {
         color:#e7b9a2;
     }
     `;
-
+    template.content.appendChild(link);
+    template.content.appendChild(link2);
     template.content.appendChild(style);
 
     const script = document.createElement('script');
@@ -179,7 +187,7 @@ const ai_call = async (userInput, messages) => {
     }
     document.getElementById("speed").innerText = tokens_sec.toFixed(2) + " tok/s";
     if (timeTaken != undefined) {
-        document.getElementById("time_speed").innerText = (timeTaken / 1000) + " sec";
+        document.getElementById("time_speed").innerText = (timeTaken / 1000).toFixed(2) + " sec";
         document.getElementById("time_speed").style.display = "block";
     }
 }
