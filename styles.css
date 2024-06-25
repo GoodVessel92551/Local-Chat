@@ -58,6 +58,7 @@ html,body{
     align-items: center;
     justify-content: center;
     margin-bottom: 16px;
+    white-space: nowrap;
 }
 
 .sub_title{
@@ -128,7 +129,7 @@ h1{
     left:50%;
     bottom:0px;
     transform: translateX(-50%);
-    
+    white-space: nowrap;
 }
 
 .time_speed{
@@ -585,4 +586,16 @@ table{
 .ai_guide::backdrop{
     background-color: #000000bd;
     transition: .4;
+}
+
+@media screen and (max-width:900px){
+    .pre_prompts{
+        display: none;
+    }
+}
+
+@media screen and (max-width:700px) {
+    .bottom_text_local{
+        display: none;
+    }
 }

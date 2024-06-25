@@ -1,6 +1,3 @@
-
-
-
 const message_container = document.getElementById("message-container");
 const close_button = document.getElementById("close_button");
 const send_button = document.getElementById("send_button");
@@ -14,7 +11,6 @@ let called = false;
 let messages = [];
 let model = null;
 const ai_guide = document.getElementById('ai_guide');
-console.log(ai_guide)
 
 
 window.addEventListener("load", async () => {
@@ -88,7 +84,6 @@ const ai_call = async (userInput, messages) => {
     let tokens = 0;
     let startTime = new Date();
     const prompt = input.value;
-    console.log(`Please respond following the conversation below. ${messages.map((message) => `${message.role}: ${message.content}`).join("\n")}\n user: ${userInput.trim()}\n assistant:`)
     let total = ""
     let title = document.createElement("div");
     let icon = document.createElement("span");
@@ -118,6 +113,11 @@ const ai_call = async (userInput, messages) => {
     .markdown-body > pre {
         background-color: #252729;
         border-radius: 16px;
+    }
+    .markdown-body code:not(pre > code) {
+        background-color: #252729;
+        border-radius: 16px;
+        color:#e7b9a2;
     }
     `;
 
@@ -158,7 +158,6 @@ const ai_call = async (userInput, messages) => {
     let tokens_sec = tokens / (timeTaken / 1000);
     speed.style.display = "block";
     speed.textContent = `${timeTaken} ms`;
-    console.log(`Tokens: ${tokens}`);
     document.getElementById("speed").innerText = tokens_sec.toFixed(2) + " tok/s"
     if (timeTaken != undefined) {
         document.getElementById("time_speed").innerText = (timeTaken / 1000) + " sec"
