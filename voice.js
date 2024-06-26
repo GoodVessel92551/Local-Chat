@@ -43,14 +43,11 @@ const speak = () => {
 }
 
 const generate_ai = async (text) => {
-    console.log(text)
     let total = ""
     const stream = model.promptStreaming(`Respond to this in one sentence: ${text}`);
     for await (const response of stream) {
-        console.log(response);
         total = response;
     }
-    console.log(total)
     voice(total)
 }
 
@@ -84,8 +81,13 @@ const voice = (text) => {
     speak()
     starting = false;
     if ('speechSynthesis' in window) {
+        console.log("text")
         const maxChunkLength = 200;
         const chunks = text.match(/[^.!?\n]+[.!?\n]/g);
+        if (chunks === null) {
+            chunks = [text];
+        }
+        console.log(chunks)
         const utterance = new SpeechSynthesisUtterance();
         const playNextChunk = (index) => {
             if (index >= chunks.length) {
