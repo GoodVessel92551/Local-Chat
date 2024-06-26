@@ -4,6 +4,7 @@ const svg_path = document.getElementById('svg_path');
 const wait_red = "#FFAAAA"
 const gen_blue = "#AACCFF"
 const speak_green = "#ACFFAA"
+const wait_gray = "#DDDDDD"
 var starting = false
 var voice_num = 0
 
@@ -22,8 +23,15 @@ window.addEventListener("load", async () => {
 })
 
 const wait = () => {
-    voice_container.style.borderColor = wait_red;
+    voice_container.style.borderColor = wait_gray;
     voice_info_text.innerText = "Waiting";
+    svg_path.style.fill = wait_gray;
+    voice_info_text.style.color = wait_gray;
+}
+
+const recording = () => {
+    voice_container.style.borderColor = wait_red;
+    voice_info_text.innerText = "Listening";
     svg_path.style.fill = wait_red;
     voice_info_text.style.color = wait_red;
 }
@@ -68,6 +76,7 @@ const record = () => {
                     lastResult = lastResult.split(/(?<=\.|\?|\!)\s/);
                     lastResult = lastResult.map(lastResult => lastResult.charAt(0).toUpperCase() + lastResult.slice(1));
                     lastResult = lastResult.join(" ");
+                    generate()
                     generate_ai(lastResult)
                 };
                 recognition.onend = () => {
@@ -118,6 +127,7 @@ const assistant = () => {
         console.log(result)
         if (result.replace(/\s+/g, '').startsWith("Phoenix")) {
             recognition.stop()
+            recording()
             console.log("Starting")
             starting = true
             record()
