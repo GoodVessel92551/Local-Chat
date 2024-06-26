@@ -662,3 +662,45 @@ table{
     color:#363636;
     font-weight: 900;
 }
+
+.voice_chat{
+    background-color: #252729;
+    display: flex;
+    position: absolute;
+    padding:5px 13px;
+    border-radius: 20px;
+    color: #f0f0f0;
+    text-decoration: none;
+    align-items: center;
+    justify-content: center;
+    gap:8px;
+    top:16px;
+    right:16px;
+    cursor: pointer;
+}
+
+.voice_chat:hover{
+    background-color: #333539;
+}
+
+.voice_chat > svg{
+    width: 18px;
+    height: 18px;
+}
+
+.voice_chat > svg > path{
+    fill: #f0f0f0;
+}
+
+.phase{
+    position: absolute;
+    bottom: 128px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #ABABAB;
+    font-size: 20px;
+}
+
+.phase > span{
+    color:#f0f0f0;
+}
