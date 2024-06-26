@@ -7,6 +7,8 @@ const speak_green = "#ACFFAA"
 const wait_gray = "#DDDDDD"
 var starting = false
 var voice_num = 0
+var messages = []
+var end_ready = false
 
 
 window.addEventListener("load", async () => {
@@ -52,10 +54,12 @@ const speak = () => {
 
 const generate_ai = async (text) => {
     let total = ""
-    const stream = model.promptStreaming(`Respond to this in one sentence: ${text}`);
+    const stream = model.promptStreaming(`Please respond in one sentence to the conversation below. ${messages.map((message) => `${message.role}: ${message.content}`).join("\n")}\n user: ${text.trim()}\n assistant:`);
     for await (const response of stream) {
         total = response;
     }
+    messages.push({ "role": "user", "content": text });
+    messages.push({ "role": "assistant", "content": total });
     voice(total)
 }
 
@@ -65,13 +69,18 @@ const record = () => {
         if (!recognition) {
             console.log('Speech recognition is not available');
         } else if (!('ontouchstart' in window)) {
-                const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-                recognition.lang = 'en-US';
-                recognition.interimResults = false;
-                recognition.maxAlternatives = 1;
+                const recognition_2 = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition_2.lang = 'en-US';
+                recognition_2.interimResults = false;
+                recognition_2.maxAlternatives = 1;
                 let lastResult = '';
-                recognition.onresult = () => {
+                setTimeout(() => {
+                    end_ready = true
+                    }, 100);
+                recognition_2.onresult = () => {
+                    end_ready = false
                     lastResult = event.results[0][0].transcript;
+                    console.log(lastResult)
                     lastResult = lastResult.replace(" full stop",".").replace(" question mark","?").replace(" exclamation mark","!").replace("full stop",".").replace("question mark","?").replace("exclamation mark","!");
                     lastResult = lastResult.split(/(?<=\.|\?|\!)\s/);
                     lastResult = lastResult.map(lastResult => lastResult.charAt(0).toUpperCase() + lastResult.slice(1));
@@ -79,9 +88,14 @@ const record = () => {
                     generate()
                     generate_ai(lastResult)
                 };
-                recognition.onend = () => {
+                recognition_2.onend = () => {
+                    if(end_ready){
+                        console.log("end")
+                        assistant()
+                    }
+                    
                 }
-                recognition.start();
+                recognition_2.start();
         }
     }
 }
@@ -91,8 +105,7 @@ const voice = (text) => {
     starting = false;
     if ('speechSynthesis' in window) {
         console.log("text")
-        const maxChunkLength = 200;
-        const chunks = text.match(/[^.!?\n]+[.!?\n]/g);
+        var chunks = text.match(/[^.!?\n]+[.!?\n]/g);
         if (chunks === null) {
             chunks = [text];
         }
@@ -100,7 +113,8 @@ const voice = (text) => {
         const utterance = new SpeechSynthesisUtterance();
         const playNextChunk = (index) => {
             if (index >= chunks.length) {
-                assistant();
+                recording()
+                record()
                 return;
             }
             utterance.text = chunks[index];
@@ -116,6 +130,7 @@ const voice = (text) => {
 };
 
 const assistant = () => {
+    messages = []
     const recognition = new window.webkitSpeechRecognition();
     recognition.lang = "en-US";
     recognition.continuous = true;
@@ -125,7 +140,7 @@ const assistant = () => {
     recognition.onresult = function(event) {
         const result = event.results[event.results.length - 1][0].transcript;
         console.log(result)
-        if (result.replace(/\s+/g, '').startsWith("Phoenix")) {
+        if (result.toLowerCase().includes("local chat")) {
             recognition.stop()
             recording()
             console.log("Starting")
