@@ -27,21 +27,54 @@
         <meta name="msapplication-TileColor" content="#333333">
 </head>
 <body>
-    <h1>Your browser does not support AI Yet</h1>
-    <p>Follow these steps to enable it.</p>
-    <ol>
-        <li>Be on Windows or Mac</li>
-        <li>Download <a target="_blank" href="https://www.google.com/intl/en_uk/chrome/canary/">Chrome Canary</a></li>
+    <div class="header">
+        <div class="logo">
+            <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0_27_23)">
+                    <path
+                        d="M26.5807 0.0959687C25.1575 0.4363 23.8766 1.32735 23.0227 2.56492C22.7257 2.99807 22.3544 3.81487 22.2121 4.3594C22.0512 4.97818 21.9893 6.16006 22.0883 6.8036C22.1935 7.47189 22.5277 8.39388 22.8742 8.98172C23.4682 9.98416 24.681 11.0113 25.7391 11.4074C26.5064 11.6982 26.8653 11.7601 28.3875 11.8467C29.2167 11.8962 30.1882 11.9828 30.5533 12.0385C32.5334 12.3293 34.761 13.1771 36.5679 14.3218C41.58 17.4962 44.4202 23.0591 44.0614 29.0056C43.9252 31.2456 43.3869 33.2195 42.3597 35.2677C41.1221 37.7181 39.0368 40.02 36.6669 41.5484C34.1051 43.2005 31.1288 44.0606 27.973 44.0668C25.6587 44.0668 23.7776 43.6955 21.7418 42.8416C18.4746 41.4741 15.7334 39.0423 13.9389 35.905C12.6828 33.7022 12.0207 31.3508 11.8846 28.5848C11.8103 27.1121 11.7856 26.8955 11.5999 26.2458C11.3091 25.2558 10.7955 24.408 10.022 23.6593C9.46511 23.1271 9.11859 22.8858 8.46268 22.5826C7.57163 22.1618 7.05185 22.0628 5.88233 22.0628C5.02841 22.0628 4.7809 22.0876 4.36631 22.199C3.81559 22.3537 2.99261 22.7249 2.56565 23.0219C1.32808 23.8697 0.424654 25.1815 0.102887 26.5861C-0.0332462 27.1864 -0.0332462 29.6491 0.0966987 30.9115C0.566975 35.3481 2.18819 39.8776 4.61382 43.5161C5.67195 45.1126 6.68677 46.3439 8.14091 47.7981C11.3153 50.9848 15.0775 53.2805 19.4585 54.6975C21.0797 55.2173 23.0784 55.6319 25.0647 55.8547C26.4012 56.0032 29.5447 56.0032 30.8689 55.8547C35.2313 55.3658 39.569 53.8622 43.0404 51.6469C49.1416 47.7424 53.4793 41.6907 55.1995 34.686C55.7626 32.3842 55.9668 30.6082 55.9668 27.966C55.9668 25.8745 55.8925 24.9587 55.6017 23.2138C55.0077 19.7053 53.5164 15.8131 51.6538 12.8986C47.0253 5.66503 39.439 0.980834 30.9307 0.0897827C29.7303 -0.0339744 27.1067 -0.0277881 26.5807 0.0959687Z"
+                        fill="url(#paint0_linear_27_23)" />
+                </g>
+                <defs>
+                    <linearGradient id="paint0_linear_27_23" x1="12.3648" y1="55.966" x2="57.1583" y2="49.0801"
+                        gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#425FC4" />
+                        <stop offset="0.52" stop-color="#397BE1" />
+                        <stop offset="1" stop-color="#3096FC" />
+                    </linearGradient>
+                    <clipPath id="clip0_27_23">
+                        <rect width="56" height="56" fill="white" />
+                    </clipPath>
+                </defs>
+            </svg>
+            <h1>Local Chat</h1>
+        </div>
+        <p>Run Gemini Nano Locally On Your Machine</p>
+    </div>
+    <main>
+        <h2>How to enable AI <span>Guide</span></h2>
+        <p>You browser does not currently support running AI locally follow the steps below to get it up and working.</p>
+        <h3>Supported platforms</h3>
+        <p>Currently support for running AI locally within the browsers is limited to Winnows and Mac OS.</p>
+        <h3>Supported browsers</h3>
+        <p>Currently only Chrome Canary and Chrome Dev support running AI locally it is receded to use Chrome Canary. You can download it <a  target="_blank" href="https://www.google.com/intl/en_uk/chrome/canary/">here</a>.</p>
         <img src="images/Screenshot 2024-06-25 163451.png">
-        <li>Set <span>chrome://flags/#optimization-guide-on-device-model</span> to <strong>Enabled BypassPerfRequirement</strong></li>
-        <li>Set <span>chrome://flags/#prompt-api-for-gemini-nano</span> to <strong>Enabled</strong></li>
+        <h3>Enabling Flags</h3>
+        <p>
+            To use AI locally you will have to enable 2 flags. 
+            <ol>
+                <li>First go to <span>chrome://flags/#optimization-guide-on-device-model</span></li>
+                <li>Set it to <span>Enabled BypassPerfRequirement</span></li>
+                <li>Next go to <span>chrome://flags/#prompt-api-for-gemini-nano</span></li>
+                <li>Set it to <span>Enabled</span></li>
+                <li>Relaunch Chrome</li>
+            </ol>
+        </p>
         <img src="images/Screenshot 2024-06-25 163504.png">
-        <li>Relaunch Chrome</li>
-        <li>Go to <span>chrome://components</span></li>
+        <h3>Downloading The Model</h3>
+        <p>To download the model you will need to go to <span>chrome://components</span> and find <span>Optimization Guide On Device</span> and click the check for update button and it should download the model.</p>
         <img src="images/Screenshot 2024-06-25 163458.png">
-        <li>Find <strong>Optimization Guide On Device </strong> and click <strong>Check for update</strong> button and it should download the model</li>
-        <li>Refresh this page</li>
-    </ol>
+    </main>
     <script>
         window.addEventListener("load", async () => {
             const hasAI = window.ai != null;

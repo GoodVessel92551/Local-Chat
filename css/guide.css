@@ -11,7 +11,6 @@ html,body{
     justify-content: center;
     font-family: Product Sans;
     color:#D9D8D8;
-    padding:32px;
 }
 
 ::-webkit-scrollbar {
@@ -65,4 +64,95 @@ ol li{
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.header{
+    color:#f0f0f0;
+    width:100%;
+    height:100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-direction: column;
+    margin:64px 0px;
+}
+
+.logo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+}
+
+.logo > h1{
+    font-size: 64px;
+    margin:0px;
+}
+
+.logo > svg{
+    width:60px;
+    height:60px;
+}
+
+.header > p{
+    margin:0px;
+}
+
+main{
+    width: calc(100% - 128px);
+    margin:0px 64px;
+    background-color: #252729;
+    border-radius: 32px 32px 0px 0px;
+    padding: 32px;
+    box-sizing: border-box;
+}
+
+main h2{
+    font-size: 32px;
+    margin-top:0px;
+    color: #f0f0f0;
+    display: flex;
+    align-items:center;
+    gap:16px;
+}
+
+main h2 > span{
+    background:#A7EFFF;
+    font-size: 12px;
+    color:#23393E;
+    padding:3px 11px;
+    border-radius: 20px;
+}
+
+main h3{
+    font-size: 24px;
+    color:#f0f0f0;
+    margin-top:32px;
+    margin-bottom: 16px;
+}
+
+main p {
+    max-width: 500px;
+}
+
+main p > a{
+    color: #b5c3ff;
+    cursor: pointer;
+}
+
+main p > a:hover{
+    color: #9caeff;
+}
+
+main p > a:focus{
+    outline: none;
+    color: #9caeff;
+}
+
+main p > span{
+    background-color: #333333;
+    border-radius: 8px;
+    padding:1px 6px;
+    color:rgb(219, 173, 173);
 }
