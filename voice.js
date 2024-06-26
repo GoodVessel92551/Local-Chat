@@ -87,7 +87,7 @@ const record = () => {
                 let lastResult = '';
                 setTimeout(() => {
                     end_ready = true
-                    }, 100);
+                    }, 200);
                 recognition_2.onresult = () => {
                     end_ready = false
                     lastResult = event.results[0][0].transcript;
@@ -102,6 +102,7 @@ const record = () => {
                 recognition_2.onend = () => {
                     if(end_ready){
                         console.log("end")
+                        end_ready = false
                         assistant()
                     }
                     
