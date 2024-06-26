@@ -11,6 +11,7 @@ html,body{
     justify-content: center;
     font-family: Product Sans;
     color:#D9D8D8;
+    margin:0px;
 }
 
 ::-webkit-scrollbar {
