@@ -173,6 +173,15 @@ const ai_call = async (userInput, messages) => {
             script.textContent = response;
             tokens += 1;
             total = response;
+            var current_time = new Date();
+            var current_time_taken = current_time - startTime;
+            if (current_time_taken != undefined) {
+                document.getElementById("time_speed").innerText = (current_time_taken / 1000).toFixed(2) + " sec";
+                document.getElementById("time_speed").style.display = "block";
+            }
+            let tokens_sec = tokens / (current_time_taken / 1000);
+            speed.style.display = "block";
+            document.getElementById("speed").innerText = tokens_sec.toFixed(2) + " tok/s";
             scrollToBottom()
         }
     }

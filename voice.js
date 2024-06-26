@@ -2,6 +2,8 @@ const voice_container = document.getElementById('voice_container');
 const voice_info_text = document.getElementById('voice_info_text');
 var svg_path = document.getElementById('svg_path');
 const svg = document.getElementById('svg');
+const phase = document.getElementById('phase');
+const current_word = document.getElementById('current_word');
 const wait_red = "#FFAAAA"
 const sleep_path = '<path id="svg_path" d="M20.026 17.001c-2.762 4.784-8.879 6.423-13.663 3.661A9.965 9.965 0 0 1 3.13 17.68a.75.75 0 0 1 .365-1.132c3.767-1.348 5.785-2.91 6.956-5.146 1.232-2.353 1.551-4.93.689-8.463a.75.75 0 0 1 .769-.927 9.961 9.961 0 0 1 4.457 1.327c4.784 2.762 6.423 8.879 3.66 13.662Z" fill="#ffffff"/>'
 const mic_path = '<path id="svg_path" d="M18.25 11a.75.75 0 0 1 .743.648l.007.102v.5a6.75 6.75 0 0 1-6.249 6.732l-.001 2.268a.75.75 0 0 1-1.493.102l-.007-.102v-2.268a6.75 6.75 0 0 1-6.246-6.496L5 12.25v-.5a.75.75 0 0 1 1.493-.102l.007.102v.5a5.25 5.25 0 0 0 5.034 5.246l.216.004h.5a5.25 5.25 0 0 0 5.246-5.034l.004-.216v-.5a.75.75 0 0 1 .75-.75ZM12 2a4 4 0 0 1 4 4v6a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4Z" fill="#ffffff"/>'
@@ -16,7 +18,7 @@ var messages = []
 var end_ready = false
 
 
-
+current_word.style.opacity = "1";
 
 window.addEventListener("load", async () => {
     const hasAI = window.ai != null;
@@ -32,6 +34,7 @@ window.addEventListener("load", async () => {
 })
 
 const wait = () => {
+    phase.style.opacity = "1"
     voice_container.style.borderColor = wait_gray;
     voice_info_text.innerText = "Sleeping";
     svg.innerHTML = sleep_path;
@@ -40,6 +43,7 @@ const wait = () => {
 }
 
 const recording = () => {
+    phase.style.opacity = "0"
     voice_container.style.borderColor = wait_red;
     voice_info_text.innerText = "Waiting";
     svg.innerHTML = mic_path;
@@ -64,8 +68,9 @@ const speak = () => {
 }
 
 const generate_ai = async (text) => {
+    current_word.innerText = ""
     let total = ""
-    const stream = model.promptStreaming(`Please respond in one sentence to the conversation below. ${messages.map((message) => `${message.role}: ${message.content}`).join("\n")}\n user: ${text.trim()}\n assistant:`);
+    const stream = model.promptStreaming(`Please respond in one or two sentences to the conversation below. ${messages.map((message) => `${message.role}: ${message.content}`).join("\n")}\n user: ${text.trim()}\n assistant:`);
     for await (const response of stream) {
         total = response;
     }
@@ -80,66 +85,84 @@ const record = () => {
         if (!recognition) {
             console.log('Speech recognition is not available');
         } else if (!('ontouchstart' in window)) {
-                const recognition_2 = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-                recognition_2.lang = 'en-US';
-                recognition_2.interimResults = false;
-                recognition_2.maxAlternatives = 1;
-                let lastResult = '';
-                setTimeout(() => {
-                    end_ready = true
-                    }, 200);
-                recognition_2.onresult = () => {
-                    end_ready = false
-                    lastResult = event.results[0][0].transcript;
-                    console.log(lastResult)
-                    lastResult = lastResult.replace(" full stop",".").replace(" question mark","?").replace(" exclamation mark","!").replace("full stop",".").replace("question mark","?").replace("exclamation mark","!");
-                    lastResult = lastResult.split(/(?<=\.|\?|\!)\s/);
-                    lastResult = lastResult.map(lastResult => lastResult.charAt(0).toUpperCase() + lastResult.slice(1));
-                    lastResult = lastResult.join(" ");
-                    generate()
-                    generate_ai(lastResult)
-                };
-                recognition_2.onend = () => {
-                    if(end_ready){
-                        console.log("end")
-                        end_ready = false
-                        assistant()
-                    }
-                    
+            const recognition_2 = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition_2.lang = 'en-US';
+            recognition_2.interimResults = false;
+            recognition_2.maxAlternatives = 1;
+            let lastResult = '';
+            setTimeout(() => {
+                end_ready = true;
+            }, 200);
+            
+            recognition_2.onresult = (event) => {
+                end_ready = false;
+                const currentSpokenText = event.results[0][0].transcript;
+                lastResult = currentSpokenText.replace(" full stop",".").replace(" question mark","?").replace(" exclamation mark","!").replace("full stop",".").replace("question mark","?").replace("exclamation mark","!");
+                lastResult = lastResult.split(/(?<=\.|\?|\!)\s/);
+                lastResult = lastResult.map(lastResult => lastResult.charAt(0).toUpperCase() + lastResult.slice(1));
+                lastResult = lastResult.join(" ");
+                generate();
+                generate_ai(lastResult);
+            };
+            
+            recognition_2.onend = () => {
+                if (end_ready) {
+                    console.log("end");
+                    end_ready = false;
+                    assistant();
                 }
-                recognition_2.start();
+            };
+            
+            recognition_2.start();
         }
     }
-}
+};
+
+
 
 const voice = (text) => {
     speak()
     starting = false;
     if ('speechSynthesis' in window) {
-        console.log("text")
+        console.log("text");
         var chunks = text.match(/[^.!?\n]+[.!?\n]/g);
         if (chunks === null) {
             chunks = [text];
         }
-        console.log(chunks)
+        console.log(chunks);
         const utterance = new SpeechSynthesisUtterance();
+
         const playNextChunk = (index) => {
             if (index >= chunks.length) {
-                recording()
-                record()
+                current_word.style.opacity = "0";
+                recording();
+                record();
+
                 return;
             }
+
             utterance.text = chunks[index];
             speechSynthesis.speak(utterance);
+
+            utterance.onboundary = (event) => {
+                if (event.name === 'word') {
+                    current_word.style.opacity = "1";
+                    const currentWord = utterance.text.substring(event.charIndex, event.charIndex + event.charLength);
+                    current_word.innerText += " "+currentWord;
+                }
+            };
+
             utterance.onend = () => {
                 playNextChunk(index + 1);
             };
         };
-    playNextChunk(0);
+
+        playNextChunk(0);
     } else {
         console.log("Speech synthesis not available.");
     }
 };
+
 
 const assistant = () => {
     messages = []

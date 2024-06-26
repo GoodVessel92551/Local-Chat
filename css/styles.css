@@ -699,8 +699,18 @@ table{
     transform: translateX(-50%);
     color: #ABABAB;
     font-size: 20px;
+    transition: .5s opacity;
 }
 
 .phase > span{
     color:#f0f0f0;
+}
+
+.current_word{
+    font-size: 24px;
+    color: #f0f0f0;
+    height:50px;
+    text-align: center;
+    font-weight: 500;
+    transition: .5s opacity;
 }
