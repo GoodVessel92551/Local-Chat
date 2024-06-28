@@ -35,7 +35,7 @@ html,body{
     flex-direction: column;
     position: relative;
     height:calc(100vh - 32px);
-    padding-top: 64px;
+    padding-top: 78px;
     box-sizing: border-box;
     align-items: center;
 }
@@ -811,4 +811,83 @@ table{
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.chat_history{
+    position: fixed;
+    top:16px;
+    left:16px;
+    background-color: #252729;
+    width:230px;
+    height:auto;
+    padding:16px;
+    box-sizing: border-box;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat_history:hover .past_chats{
+    display: flex;
+}
+
+
+.history_title{
+    display: flex;
+    align-items: center;
+    color: #fff;
+    font-weight: 600;
+}
+
+.history_title > button{
+    background:none;
+    cursor: pointer;
+    border:none;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+.history_title > button > svg{
+    width: 16px;
+    height: 16px;
+}
+
+.past_chats{
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.history_element{
+    color:#f0f0f0;
+    padding:9px 0px;
+    font-size: 14px;
+    display: flex;
+    cursor: pointer;
+}
+
+.history_element:hover button{
+    display: flex;
+
+}
+.history_element > button{
+    background:none;
+    border:none;
+    cursor: pointer;
+    color:#f0f0f0;
+    display: none;
+    align-items: center;
+    gap:8px;
+    margin-left: auto;
+}
+.history_element > button > svg{
+    width: 16px;
+    height: 16px;
+}
+
+@media screen and (max-width: 1500px){
+    .past_chats{
+        display: none;
+    }
+    
 }
