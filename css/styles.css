@@ -714,3 +714,101 @@ table{
     font-weight: 500;
     transition: .5s opacity;
 }
+
+.file_message{
+    width: auto;
+    background: #252729;
+    display: inline-flex;
+    gap:8px;
+    align-items: center;
+    padding: 8px 16px 8px 8px;
+    border-radius: 25px;
+    margin-top: 8px;
+}
+
+.file_message > .file_icon{
+    height:24px;
+    width: 24px;
+    background: #CE5F87;
+    border-radius: 30px;
+    font-size: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.file_message > .file_icon > svg{
+    width: 16px;
+    height: 16px;
+}
+
+.file_message > .file_text{
+    display: flex;
+    justify-content: center;
+}
+
+.file_message > .file_text > strong{
+    font-size: 12px;
+    color:#f0f0f0;
+    font-weight: normal;
+}
+
+.file_message{
+    margin-left:40px;
+}
+
+.file_holding{
+    width:100%;
+    height:64px;
+    background-color: #252729;
+    border-radius: 16px;
+    display: none;
+}
+
+.file_holding > a{
+    background-color: #3b3c3d;
+    display: flex;
+    color: #f0f0f0;
+    height: 48px;
+    width:200px;
+    margin: 8px;
+    border-radius: 32px;
+    align-items: center;
+    gap:8px;
+    padding:0px 8px
+}
+
+.file_holding > a > .file_icon{
+    width: 32px;
+    height: 32px;
+    fill: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #CE5F87;
+    border-radius: 16px;
+}
+
+.file_holding > a > .file_icon > svg{
+    width: 16px;
+    height: 16px;
+
+}
+
+.file_holding > a > .file_text{
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    justify-content: space-between;
+}
+
+.file_holding > a > .file_text > span{
+    color: #ccc;
+}
+
+.file_holding > a > .file_text > strong{
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

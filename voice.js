@@ -121,7 +121,7 @@ const record = () => {
 
 
 const voice = (text) => {
-    speak()
+    speak();
     starting = false;
     if ('speechSynthesis' in window) {
         console.log("text");
@@ -140,17 +140,25 @@ const voice = (text) => {
 
                 return;
             }
-
             utterance.text = chunks[index];
             speechSynthesis.speak(utterance);
-
-            utterance.onboundary = (event) => {
+            utterance.addEventListener('boundary', (event) => {
                 if (event.name === 'word') {
-                    current_word.style.opacity = "1";
-                    const currentWord = utterance.text.substring(event.charIndex, event.charIndex + event.charLength);
-                    current_word.innerText += " "+currentWord;
+                    const text = utterance.text;
+                    const wordIndex = event.charIndex;
+                    const words = text.split(/\s+/);
+                    let currentWord = '';
+                    let charCount = 0;
+                    for (let i = 0; i < words.length; i++) {
+                        charCount += words[i].length + 1; // +1 for the space after the word
+                        if (charCount > wordIndex) {
+                            currentWord = words[i];
+                            break;
+                        }
+                    }
+                    console.log('Current word:', currentWord);
                 }
-            };
+            });
 
             utterance.onend = () => {
                 playNextChunk(index + 1);
@@ -162,6 +170,7 @@ const voice = (text) => {
         console.log("Speech synthesis not available.");
     }
 };
+
 
 
 const assistant = () => {
