@@ -864,6 +864,14 @@ table{
     font-size: 14px;
     display: flex;
     cursor: pointer;
+    border-radius: 8px;
+    padding-left:8px;
+    box-sizing: border-box;
+}
+
+.current_chat{
+    background-color: #3b3c3d;
+
 }
 
 .history_element > span{
@@ -890,6 +898,14 @@ table{
 .history_element > button > svg{
     width: 16px;
     height: 16px;
+}
+
+.history_element > button > svg > path{
+    fill: #f0f0f0;
+}
+
+.history_element > button:hover > svg > path{
+    fill: #ffb7b7;
 }
 
 @media screen and (max-width: 1500px){
