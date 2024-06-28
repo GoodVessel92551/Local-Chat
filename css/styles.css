@@ -866,6 +866,13 @@ table{
     cursor: pointer;
 }
 
+.history_element > span{
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .history_element:hover button{
     display: flex;
 
