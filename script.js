@@ -212,7 +212,7 @@ const ai_call = async (userInput, messages) => {
     if (PDF_content == "") {
         stream = model.promptStreaming(`Please respond as concise as possible to the conversation below. ${messages.map((message) => `${message.role}: ${message.content}`).join("\n")}\n user: ${userInput.trim()}\n assistant:`);
     }else{
-        stream = model.promptStreaming(`Please respond as concise as possible to the conversation below with the help of this pdf:${PDF_content.substring(0, 2000)}. ${messages.map((message) => `${message.role}: ${message.content}`).join("\n")}\n user: ${userInput.trim()}\n assistant:`);
+        stream = model.promptStreaming(`Please respond as concise as possible to the conversation below with the help of this pdf:${PDF_content.substring(0, 3000)}. ${messages.map((message) => `${message.role}: ${message.content}`).join("\n")}\n user: ${userInput.trim()}\n assistant:`);
     }
 
     const generate = async () => {
