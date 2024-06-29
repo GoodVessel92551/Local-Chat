@@ -491,6 +491,7 @@ clear_chats.addEventListener("click", () => {
         "chats":{}
     }
     localStorage.setItem("history", JSON.stringify(history))
+    new_chat()
     reset_chat_window()
     update_history()
 })
