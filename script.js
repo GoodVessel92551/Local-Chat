@@ -423,6 +423,7 @@ const load_messages = () => {
             "chats":{}
         }
         localStorage.setItem("history", JSON.stringify(history_format));
+        new_chat()
     }
 }
 
