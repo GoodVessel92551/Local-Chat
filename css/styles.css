@@ -29,13 +29,14 @@ html,body{
 }
 
 .container{
-    width:90vw;
+    width:calc(90vw - 250px);
     max-width: 900px;
     display: flex;
     flex-direction: column;
     position: relative;
     height:calc(100vh - 32px);
     padding-top: 78px;
+    padding-left: 250px;
     box-sizing: border-box;
     align-items: center;
 }
@@ -46,7 +47,7 @@ html,body{
     flex-direction: column;
     align-items: center;
     top:300px;
-    left:50%;
+    left:calc(50% + 125px);
     transform: translateX(-50%);
     z-index: 5;
 }
@@ -815,14 +816,13 @@ table{
 
 .chat_history{
     position: fixed;
-    top:16px;
-    left:16px;
+    top:0;
+    left:0;
     background-color: #252729;
-    width:230px;
-    height:auto;
+    width:250px;
+    height:100vh;
     padding:16px;
     box-sizing: border-box;
-    border-radius: 16px;
     display: flex;
     flex-direction: column;
 }
@@ -832,11 +832,16 @@ table{
 }
 
 
+
 .history_title{
     display: flex;
     align-items: center;
     color: #fff;
     font-weight: 600;
+    height:40px;
+
+    border-radius: 32px;
+
 }
 
 .history_title > button{
@@ -846,6 +851,17 @@ table{
     margin-left: auto;
     display: flex;
     align-items: center;
+    background-color: white;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 12px;
+    padding:4px 7px;
+}
+
+.history_title > strong{
+    display: flex;
+    align-items: center;
+    gap:8px;
 }
 
 .history_title > button > svg{
@@ -853,24 +869,31 @@ table{
     height: 16px;
 }
 
+.history_title > button > svg > path{
+    fill: #000;
+}
+
 .past_chats{
     display: flex;
     flex-direction: column-reverse;
+    gap:4px;
 }
 
 .history_element{
-    color:#f0f0f0;
+    color:#C3C3C3;
     padding:9px 0px;
-    font-size: 14px;
+    font-size: 16px;
     display: flex;
     cursor: pointer;
     border-radius: 8px;
-    padding-left:8px;
+    padding-left:16px;
+    padding-right: 8px;
     box-sizing: border-box;
 }
 
 .current_chat{
-    background-color: #3b3c3d;
+    background: #34373A;
+    color: #fff;
 
 }
 
@@ -883,8 +906,12 @@ table{
 
 .history_element:hover button{
     display: flex;
-
 }
+
+.current_chat > button{
+    display: flex !important;
+}
+
 .history_element > button{
     background:none;
     border:none;
@@ -908,9 +935,37 @@ table{
     fill: #ffb7b7;
 }
 
-@media screen and (max-width: 1500px){
-    .past_chats{
-        display: none;
-    }
-    
+.clear_chats{
+    display: flex;
+    align-items: center;
+    gap:8px;
+    background-color: #34373A;
+    padding: 8px;
+    color: #f0f0f0;
+    border:none;
+    border-radius: 8px;
+    margin-top: auto;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.clear_chats > svg{
+    width: 20px;
+    height: 20px;
+}
+
+.clear_chats > svg > path{
+    fill: #f0f0f0;
+}
+
+.clear_chats:hover{
+    background-color: #42454A;
+}
+
+.saved_chats{
+    margin: 0px;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color:#999999;
+    margin-top:8px
 }
