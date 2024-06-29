@@ -3,10 +3,11 @@ const close_button = document.getElementById("close_button");
 const send_button = document.getElementById("send_button");
 const input = document.getElementById("user-input");
 const welcome = document.getElementById("welcome");
-const logo = document.getElementById("logo");
-const clear_button = document.getElementById("clear_button");
+const clear_button = document.getElementById("clear");
+const past_chats = document.getElementById("past_chats")
+const clear_chats = document.getElementById("clear_chats")
 
-
+var current_chat_id, chat_id, chats,current_chat;
 var PDF_content = ""
 var fileName = ""
 let running = false;
@@ -37,10 +38,12 @@ const scrollToBottom = () => {
     message_container.scrollTop = message_container.scrollHeight;
 }
 const clear = () => {
-    window.location.reload();
+    new_chat()
+    reset_chat_window()
+    update_history()
 }
 
-//clear_button.addEventListener("click", clear);
+clear_button.addEventListener("click", clear);
 
 document.getElementById('fileInput').addEventListener('change', function (event) {
     const file = event.target.files[0];
@@ -49,7 +52,6 @@ document.getElementById('fileInput').addEventListener('change', function (event)
         return;
     }
     fileName = file.name
-    console.log(file.name)
     document.getElementById('file_title').innerText = file.name
     document.getElementById('file_holding').style.display = "flex"
     document.getElementById("user-input").focus()
@@ -74,7 +76,6 @@ document.getElementById('fileInput').addEventListener('change', function (event)
             Promise.all(textPromises).then(function(pagesText) {
                 textContent = pagesText.join(' ');
                 PDF_content = textContent
-                console.log(PDF_content)
             });
         });
     };
@@ -96,7 +97,6 @@ const removeDuplicate = (originalText, newText) => {
 
 const start_chat = () => {
     welcome.style.display = "none"
-    logo.style.display = "flex"
 }
 input.addEventListener("input", () => {
     called = false
@@ -139,6 +139,7 @@ const ai_call = async (userInput, messages) => {
     let tokens = 0;
     let startTime = new Date();
     const prompt = input.value;
+    var message = prompt
     let total = ""
     let title = document.createElement("div");
     let icon = document.createElement("span");
@@ -214,7 +215,6 @@ const ai_call = async (userInput, messages) => {
     }else{
         stream = model.promptStreaming(`Please respond as concise as possible to the conversation below with the help of this pdf:${PDF_content.substring(0, 3000)}. ${messages.map((message) => `${message.role}: ${message.content}`).join("\n")}\n user: ${userInput.trim()}\n assistant:`);
     }
-
     const generate = async () => {
         for await (const response of stream) {
             script.textContent = response;
@@ -233,8 +233,13 @@ const ai_call = async (userInput, messages) => {
         }
     }
     await generate();
-    messages.push({ "role": "user", "content": prompt });
+    messages.push({ "role": "user", "content": userInput });
     messages.push({ "role": "assistant", "content": total });
+    var history = JSON.parse(localStorage.getItem("history"))
+    history["chats"][history.current_chat_id] = messages
+    localStorage.setItem("history", JSON.stringify(history))
+    update_history()
+
     position.innerHTML = `<svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4.53 12.97a.75.75 0 0 0-1.06 1.06l4.5 4.5a.75.75 0 0 0 1.06 0l11-11a.75.75 0 0 0-1.06-1.06L8.5 16.94l-3.97-3.97Z" fill="#ffffff"/></svg>Complete`
     position.classList.remove("genning");
     position.classList.add("done");
@@ -319,3 +324,188 @@ fileReader.onload = function() {
         });
     });
 };
+
+const appendMessage_ai = (message) => {
+    let title = document.createElement("div");
+    let icon = document.createElement("span");
+    let name_type = document.createElement("type");
+    let p = document.createElement("p");
+    var position = document.createElement("span");
+    var link = document.createElement("link");
+    var link2 = document.createElement("link");
+    link.rel = "stylesheet";
+    link2.rel = "stylesheet";
+    link.href = "https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown-dark.min.css";
+    link2.href = "https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11/styles/github-dark.min.css";
+    position.id = "position_"+message_id
+    position.classList.add("position")
+    const zeroMd = document.createElement('zero-md');
+    const template = document.createElement('template');
+    template.setAttribute('data-append', '');
+    const style = document.createElement('style');
+    style.textContent = `
+    .markdown-body {
+        padding: 0px !important;
+        box-sizing: border-box !important;
+        border-radius: 16px !important;
+        height: auto !important;
+        width: auto !important;
+        background-color: transparent  !important;
+        border: 1px solid transparent  !important;
+        margin-left: 40px !important;
+        font-family: "Manrope", sans-serif !important;
+    }
+
+    .markdown-body > pre {
+        background-color: #252729;
+        border-radius: 16px;
+    }
+    .markdown-body code:not(pre > code) {
+        background-color: #252729;
+        border-radius: 16px;
+        color:#e7b9a2;
+    }
+    `;
+    template.content.appendChild(link);
+    template.content.appendChild(link2);
+    template.content.appendChild(style);
+
+    const script = document.createElement('script');
+    script.setAttribute('type', 'text/markdown');
+    script.setAttribute('id', 'output');
+
+    zeroMd.appendChild(template);
+    zeroMd.appendChild(script);
+    script.textContent = message;
+    p.id = "message_" + message_id
+    message_id++
+    let messageDiv = document.createElement("div");
+    messageDiv.classList.add("message");
+    let messageContainer = document.getElementById("message-container");
+    title.appendChild(icon);
+    title.appendChild(name_type);
+    messageDiv.appendChild(title);
+    messageDiv.appendChild(position);
+    messageDiv.appendChild(p);
+    messageDiv.appendChild(zeroMd);
+    messageContainer.appendChild(messageDiv);
+    icon.classList.add("modal");
+    icon.innerHTML = '<svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8.664 15.735c.245.173.537.265.836.264v-.004a1.442 1.442 0 0 0 1.327-.872l.613-1.864a2.872 2.872 0 0 1 1.817-1.812l1.778-.578a1.443 1.443 0 0 0-.052-2.74l-1.755-.57a2.876 2.876 0 0 1-1.822-1.823l-.578-1.777a1.446 1.446 0 0 0-2.732.022l-.583 1.792a2.877 2.877 0 0 1-1.77 1.786l-1.777.571a1.444 1.444 0 0 0 .017 2.734l1.754.569a2.887 2.887 0 0 1 1.822 1.826l.578 1.775c.099.283.283.528.527.7Zm7.667 5.047a1.123 1.123 0 0 1-.41-.549l-.328-1.007a1.293 1.293 0 0 0-.821-.823l-.991-.323A1.148 1.148 0 0 1 13 16.997a1.143 1.143 0 0 1 .771-1.08l1.006-.326a1.3 1.3 0 0 0 .8-.819l.324-.992a1.143 1.143 0 0 1 2.157-.021l.329 1.014a1.3 1.3 0 0 0 .82.816l.992.323a1.141 1.141 0 0 1 .039 2.165l-1.014.329a1.3 1.3 0 0 0-.818.822l-.322.989c-.078.23-.226.43-.425.57a1.14 1.14 0 0 1-1.328-.005Z" fill="#ffffff"/></svg>';
+    name_type.innerHTML = "Local Chat";
+    position.innerHTML = `<svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4.53 12.97a.75.75 0 0 0-1.06 1.06l4.5 4.5a.75.75 0 0 0 1.06 0l11-11a.75.75 0 0 0-1.06-1.06L8.5 16.94l-3.97-3.97Z" fill="#ffffff"/></svg>Complete`
+    position.classList.remove("genning");
+    position.classList.add("done");
+}
+
+const load_messages = () => {
+    if (localStorage.getItem("history") != null) {
+        var history = JSON.parse(localStorage.getItem("history"));
+        current_chat_id = history.current_chat_id;
+        chat_id = history.chat_id;
+        chats = history.chats;
+        current_chat = chats[current_chat_id];
+        if ((current_chat != undefined) && (Object.keys(current_chat).length != 0)){
+            messages = current_chat;
+            welcome.style.display = "none"
+            current_chat.forEach(element => {
+                if (element.role == "user") {
+                    appendMessage(element.content, "user");
+                } else {
+                    appendMessage_ai(element.content);
+                }
+            });
+        }
+        update_history()
+    }else{
+        var history_format = {
+            "current_chat_id":0,
+            "chat_id":0,
+            "chats":{}
+        }
+        localStorage.setItem("history", JSON.stringify(history_format));
+        new_chat()
+        update_history()
+    }
+}
+
+const update_history = () => {
+    past_chats.innerHTML = ""
+    var history = JSON.parse(localStorage.getItem("history"));
+    var deleting = false
+    current_chat_id = history.current_chat_id;
+    chat_id = history.chat_id;
+    chats = history.chats;
+    Object.keys(chats).forEach(element => {
+        var history_element = document.createElement("div");
+        history_element.classList.add("history_element");
+        if (element == current_chat_id) {
+            history_element.classList.add("current_chat")
+        }
+        var history_title = document.createElement("span");
+        var delete_button = document.createElement("button");
+
+        delete_button.innerHTML = '<svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 1.75a3.25 3.25 0 0 1 3.245 3.066L15.25 5h5.25a.75.75 0 0 1 .102 1.493L20.5 6.5h-.796l-1.28 13.02a2.75 2.75 0 0 1-2.561 2.474l-.176.006H8.313a2.75 2.75 0 0 1-2.714-2.307l-.023-.174L4.295 6.5H3.5a.75.75 0 0 1-.743-.648L2.75 5.75a.75.75 0 0 1 .648-.743L3.5 5h5.25A3.25 3.25 0 0 1 12 1.75Zm6.197 4.75H5.802l1.267 12.872a1.25 1.25 0 0 0 1.117 1.122l.127.006h7.374c.6 0 1.109-.425 1.225-1.002l.02-.126L18.196 6.5ZM13.75 9.25a.75.75 0 0 1 .743.648L14.5 10v7a.75.75 0 0 1-1.493.102L13 17v-7a.75.75 0 0 1 .75-.75Zm-3.5 0a.75.75 0 0 1 .743.648L11 10v7a.75.75 0 0 1-1.493.102L9.5 17v-7a.75.75 0 0 1 .75-.75Zm1.75-6a1.75 1.75 0 0 0-1.744 1.606L10.25 5h3.5A1.75 1.75 0 0 0 12 3.25Z" fill="#ffffff"/></svg>'
+        if (Object.keys(chats[element]).length != 0){
+            history_title.innerText = chats[element][0].content.substring(0, 40);
+        }else{
+            history_title.innerText = "New Chat"
+        }
+        
+        delete_button.addEventListener("click", () => {
+            deleting = true
+            delete chats[element];
+            localStorage.setItem("history", JSON.stringify(history));
+            if (element == current_chat_id) {
+                new_chat()
+            }
+            reset_chat_window()
+            update_history()
+        })
+        history_element.addEventListener("click", (e) => {
+            if (!deleting) {
+                history = JSON.parse(localStorage.getItem("history"));
+                history.current_chat_id = element;
+                localStorage.setItem("history", JSON.stringify(history));
+                reset_chat_window()
+            }
+        })
+        history_element.appendChild(history_title);
+        history_element.appendChild(delete_button);
+        past_chats.appendChild(history_element);
+
+    })
+}
+
+const reset_chat_window = () => {
+    input.focus()
+    message_container.innerHTML = ""
+    messages = []
+    welcome.style.display = "block"
+    load_messages()
+}
+
+clear_chats.addEventListener("click", () => {
+    var history = {
+        "current_chat_id":0,
+        "chat_id":0,
+        "chats":{}
+    }
+    localStorage.setItem("history", JSON.stringify(history))
+    new_chat()
+    reset_chat_window()
+    update_history()
+})
+
+const new_chat = () => {
+    var history = JSON.parse(localStorage.getItem("history"))
+    chat_id = history.chat_id + 1;
+    history.chat_id = chat_id;
+    history.current_chat_id = history.chat_id;
+    history["chats"][chat_id] = {}
+    console.log(history)
+    localStorage.setItem("history", JSON.stringify(history))
+    console.log(JSON.parse(localStorage.getItem("history")))
+    return
+}
+
+load_messages()
