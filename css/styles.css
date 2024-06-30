@@ -969,3 +969,28 @@ table{
     color:#999999;
     margin-top:8px
 }
+
+.sidebar_buttons{
+    display: flex;
+    flex-direction: row;
+    gap:8px;
+    margin-top: auto;
+    width: 100%;
+}
+
+.sidebar_buttons > button, .sidebar_buttons > a{
+    width: 100%;
+    height:32px;
+    background-color: #34373A;
+    border:none;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.sidebar_buttons > button > svg, .sidebar_buttons > a > svg{
+    width: 16px;
+    height: 16px;
+}
