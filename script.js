@@ -17,6 +17,10 @@ let messages = [];
 let model = null;
 const ai_guide = document.getElementById('ai_guide');
 
+const google_bot = () => {
+    return /Googlebot|Googlebot-Mobile|Googlebot-Image|AdsBot-Google/i.test(navigator.userAgent);
+}
+
 const url_find = (text) => {
     return text.match(urlPattern);
 }
@@ -27,7 +31,7 @@ window.addEventListener("load", async () => {
     const hasNano =
         (hasAI && (await window.ai.canCreateTextSession())) === "readily";
     
-    if (!hasNano) {
+    if (!hasNano && !google_bot()) {
         window.location.href = "/guide.html"
         return;
     }
@@ -480,7 +484,7 @@ const reset_chat_window = () => {
     input.focus()
     message_container.innerHTML = ""
     messages = []
-    welcome.style.display = "block"
+    welcome.style.display = "flex"
     load_messages()
 }
 
