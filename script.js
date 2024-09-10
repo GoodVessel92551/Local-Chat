@@ -35,6 +35,18 @@ const clear = () => {
     update_history()
 }
 
+document.addEventListener("DOMContentLoaded", async () => {
+    try{
+        var capabilities = await ai.assistant.capabilities();
+    }catch{
+        console.error("No AI")
+        window.location.href = "/error.html"
+    }
+    if (capabilities.available == "no" || capabilities.available == "after-download")window.location.href = "/error.html"
+    load_model()
+})
+
+
 clear_button.addEventListener("click", clear);
 
 document.getElementById('fileInput').addEventListener('change', function (event) {
@@ -126,12 +138,17 @@ const sendMessage = (prompt) => {
 }
 
 let modal
+let model_new_chat
 
 const load_model = async () => {
     console.log(messages)
+    if(messages.length == 0){
+        model_new_chat = true
+    }else{
+        model_new_chat = false
+    }
     model = await ai.assistant.create({
         systemPrompt: "Your name is Local Chat",
-        initialPrompts:messages,
         monitor(m) {
             m.addEventListener("downloadprogress", e => {
               console.log(`Downloaded ${e.loaded} of ${e.total} bytes.`);
@@ -139,10 +156,6 @@ const load_model = async () => {
           }
     });
 }
-
-document.addEventListener("DOMContentLoaded", async () => {
-    load_model()
-})
 
 const ai_call = async (userInput, messages) => {
     document.getElementById('file_holding').style.display = "none"
@@ -221,11 +234,21 @@ const ai_call = async (userInput, messages) => {
     position.classList.add("genning");
     position.innerHTML = `<svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8.664 15.735c.245.173.537.265.836.264v-.004a1.442 1.442 0 0 0 1.327-.872l.613-1.864a2.872 2.872 0 0 1 1.817-1.812l1.778-.578a1.443 1.443 0 0 0-.052-2.74l-1.755-.57a2.876 2.876 0 0 1-1.822-1.823l-.578-1.777a1.446 1.446 0 0 0-2.732.022l-.583 1.792a2.877 2.877 0 0 1-1.77 1.786l-1.777.571a1.444 1.444 0 0 0 .017 2.734l1.754.569a2.887 2.887 0 0 1 1.822 1.826l.578 1.775c.099.283.283.528.527.7Zm-.374-4.25a4.054 4.054 0 0 0-.363-.413h.003a4.394 4.394 0 0 0-1.72-1.063l-1.6-.508 1.611-.524a4.4 4.4 0 0 0 1.69-1.065 4.448 4.448 0 0 0 1.041-1.708l.515-1.582.516 1.587a4.374 4.374 0 0 0 2.781 2.773l1.62.522-1.59.515a4.379 4.379 0 0 0-2.774 2.775l-.515 1.582-.515-1.585a4.368 4.368 0 0 0-.7-1.306Zm8.041 9.297a1.123 1.123 0 0 1-.41-.549l-.328-1.007a1.293 1.293 0 0 0-.821-.823l-.991-.323A1.148 1.148 0 0 1 13 16.997a1.143 1.143 0 0 1 .771-1.08l1.006-.326a1.3 1.3 0 0 0 .8-.819l.324-.992a1.143 1.143 0 0 1 2.157-.021l.329 1.014a1.3 1.3 0 0 0 .82.816l.992.323a1.141 1.141 0 0 1 .039 2.165l-1.014.329a1.3 1.3 0 0 0-.818.822l-.322.989c-.078.23-.226.43-.425.57a1.14 1.14 0 0 1-1.328-.005Zm-1.03-3.783A2.789 2.789 0 0 1 17 18.708a2.794 2.794 0 0 1 1.7-1.7 2.813 2.813 0 0 1-1.718-1.708A2.806 2.806 0 0 1 15.3 17Z" fill="#ffffff"/></svg>Generating`
     var stream
-    if (PDF_content == "") {
+    console.log(model_new_chat)
+    if (PDF_content == "" && model_new_chat) {
+        console.log("1")
         stream = model.promptStreaming(userInput.trim());
+    }else if(PDF_content != "" && model_new_chat){
+        console.log("2")
+        stream = model.promptStreaming(`${PDF_content.substring(0, 3000)}\n\n${userInput.trim()}`);
+    }else if(PDF_content == "" && model_new_chat){
+        console.log("3")
+        stream = model.promptStreaming(`${messages.map((message) => `${message.role}: ${message.content}`).join("\n")}\n user: ${userInput.trim()}\n assistant:`);
     }else{
+        console.log("4")
         stream = model.promptStreaming(`${PDF_content.substring(0, 3000)}. ${messages.map((message) => `${message.role}: ${message.content}`).join("\n")}\n user: ${userInput.trim()}\n assistant:`);
     }
+    
     const generate = async () => {
         for await (const response of stream) {
             script.textContent = response;
