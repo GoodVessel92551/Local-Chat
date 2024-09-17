@@ -866,7 +866,12 @@ table{
     border-radius: 16px;
     cursor: pointer;
     font-size: 12px;
-    padding:4px 7px;
+    padding:4px 9px;
+    transition: .2s filter;
+}
+
+.history_title > button:hover{
+    filter: brightness(90%);
 }
 
 .history_title > strong{

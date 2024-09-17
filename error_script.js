@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 })
 
 download_button.addEventListener("click", async () => {
+  download_button.textContent = "Downloading"
     const session = await ai.assistant.create({
         monitor(m) {
           m.addEventListener("downloadprogress", e => {
