@@ -34,9 +34,9 @@ html,body{
     display: flex;
     flex-direction: column;
     position: relative;
-    height:calc(100vh - 32px);
-    padding-top: 78px;
-    padding-left: 250px;
+    height:calc(100vh - 110px);
+    margin-top: 78px;
+    margin-left: 250px;
     box-sizing: border-box;
     align-items: center;
 }
@@ -48,6 +48,17 @@ html,body{
     align-items: center;
     top:300px;
     left:calc(50% + 125px);
+    transform: translateX(-50%);
+    z-index: 5;
+}
+
+.error_page_logo{
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    align-items: center;
+    top:40%;
+    left:50%;
     transform: translateX(-50%);
     z-index: 5;
 }
@@ -855,7 +866,12 @@ table{
     border-radius: 16px;
     cursor: pointer;
     font-size: 12px;
-    padding:4px 7px;
+    padding:4px 9px;
+    transition: .2s filter;
+}
+
+.history_title > button:hover{
+    filter: brightness(90%);
 }
 
 .history_title > strong{
@@ -895,6 +911,10 @@ table{
     background: #34373A;
     color: #fff;
 
+}
+
+.history_element:not(.current_chat):hover{
+    background: #2a2b2d;
 }
 
 .history_element > span{
@@ -993,4 +1013,132 @@ table{
 .sidebar_buttons > button > svg, .sidebar_buttons > a > svg{
     width: 16px;
     height: 16px;
+}
+
+.choseModelContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 200;
+    flex-direction: column;
+    top:8px;
+    cursor: pointer;
+}
+
+.choseModelHover{
+    background-color: #212121;
+    width: 150px;
+    height: 6px;
+    box-sizing: border-box;
+    border-radius: 40px;
+    cursor: pointer;
+    z-index: 200;
+    top:8px;
+    transition: .2s width ease, .2s height ease, .2s background-color ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:8px;
+}
+
+.choseModelHover:hover{
+    width: 435px;
+    height: 45px;
+    background-color: #212121;
+}
+
+@keyframes choseModelLoadButton {
+    0%{
+        opacity: 0;
+    }
+    40%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+.choseModelHover:hover button{
+    animation: choseModelLoadButton .4s forwards;
+}
+
+
+.choseModelHover > button{
+    opacity: 0;
+    display: flex;
+    padding:5px 9px;
+    border-radius: 20px;
+    border:none;
+    font-size: 14px;
+    display: flex;
+    gap:8px;
+    align-items: center;
+    justify-content: center;
+    background-color: #333539;
+    color: #f0f0f0;
+    cursor: pointer;
+}
+
+.choseModelHover > button > svg{
+    width: 16px;
+    height: 16px;
+}
+
+
+.choseModel{
+    background-color: #ccc;
+    width: 500px;
+    height: 40px;
+    display: none;
+    margin:8px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.wanning_container{
+    position: absolute;
+    bottom: 32px;
+    width: 450px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap:12px;
+    align-items: center;
+}
+
+.wanning_container > .title{
+    color:#fff;
+    margin: 0px;
+}
+
+.wanning_container > p{
+    font-size: 12px;
+    text-align: center;
+    color: #C2C2C2;
+    margin:0px;
+}
+
+.wanning_container > a{
+    display: flex;
+    padding: 8px 13px;
+    border-radius: 8px;
+    border:none;
+    cursor: pointer;
+    margin-top:8px;
+    transition: .2s filter;
+}
+
+.wanning_container > a:hover{
+    filter: brightness(90%);
+}
+
+.error_button{
+    background-color: #D18282;
+}
+
+.wanning_button{
+    background-color: #D1AD82;
 }
