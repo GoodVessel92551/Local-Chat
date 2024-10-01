@@ -192,7 +192,7 @@ const ai_call = async (userInput, messages) => {
         background-color: transparent  !important;
         border: 1px solid transparent  !important;
         margin-left: 40px !important;
-        font-family: "Manrope", sans-serif !important;
+        font-family: "League Spartan", system-ui !important;
     }
 
     .markdown-body > pre {

@@ -1,10 +1,10 @@
 
 
 html,body{
-    background:#111113;
+    background:#000000;
     display: flex;
     justify-content: center;
-    font-family: Product Sans;
+    font-family: "League Spartan", system-ui;
 }
 
 ::-webkit-scrollbar {
@@ -18,14 +18,15 @@ html,body{
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #252729;
+    background: #201F1F;
     transition: 0.2s;
     border-radius: 10px;
     z-index: 5;
 }
 
 *{
-    font-family: "Manrope", sans-serif;
+    font-family: "League Spartan", system-ui !important;
+    vertical-align: sub;
 }
 
 .container{
@@ -81,23 +82,11 @@ html,body{
 
 h1{
     color:#f0f0f0;
-    font-size: 48px;
+    font-size: 52px;
     margin:0;
 
 }
 
-.google_text{
-    font-family: "Poppins", sans-serif !important;
-    font-weight: 500;
-}
-
-.fancy_text{
-    font-weight: bolder;
-    background-image: linear-gradient(45deg, #425FC4, #397BE1,#3096FC);
-    -webkit-background-clip: text; /* Clip the text to the background */
-    background-clip: text;
-    color: transparent; 
-}
 
 .message-container{
     width:100%;
@@ -117,7 +106,7 @@ h1{
     display: flex;
     flex-direction: column;
     gap:8px;
-    background-color: #252729;
+    background-color: #201F1F;
     padding: 8px 12px;
     border-radius: 32px;
 }
@@ -164,7 +153,7 @@ h1{
     height:32px;
     border-radius: 20px;
     border:none;
-    background-color: #252729;
+    background-color: #201F1F;
     color:#f0f0f0;
     display: flex;
     gap:8px;
@@ -183,13 +172,13 @@ h1{
 }
 
 .send_button > svg{
-    fill: #252729;
+    fill: #201F1F;
     height: 18px;
     width: 18px;
 }
 
 .send_button > svg > path{
-    fill: #252729;
+    fill: #201F1F;
 }
 
 .send_button:disabled{
@@ -202,7 +191,7 @@ h1{
     width:100%;
     border-radius: 20px;
     border:none;
-    background-color: #252729;
+    background-color: #201F1F;
     color:#f0f0f0;
     padding:8px 15px;
     height:40px;
@@ -316,7 +305,7 @@ h1{
 
 .examples > button{
     width:100%;
-    background-color: #252729;
+    background-color: #201F1F;
     border:none;
     border-radius: 8px;
     display: flex;
@@ -359,7 +348,7 @@ h1{
 }
 
 .image_loading{
-    background-color: #252729;
+    background-color: #201F1F;
     display: block;
     width: 272px;
     border-radius: 16px;
@@ -455,7 +444,7 @@ h1{
 }
 
 .message pre{
-    background:#252729;
+    background:#201F1F;
     border-radius: 16px;
     padding:16px;
 }
@@ -474,21 +463,33 @@ h1{
 
 .pre_prompts{
     display: flex;
-    gap:16px;
+    gap:4px;
     margin-top: 32px;
 }
 
 .pre_prompts > div{
-    background-color: #252729;
+    background-color: #201F1F;
     border-radius: 16px;
     padding:12px;
     display: flex;
-    height:80px;
+    height:70px;
     width: 150px;
     cursor: pointer;
     flex-direction: column;
     color:#f0f0f0;
     gap:8px;
+}
+
+.pre_prompts > :first-child{
+    border-radius: 16px 8px 8px 16px;
+}
+
+.pre_prompts >div:not(.pre_prompts > :first-child,.pre_prompts > :last-child){
+    border-radius: 8px;
+}
+
+.pre_prompts > :last-child{
+    border-radius: 8px 16px 16px 8px;
 }
 
 .pre_prompts > div:hover{
@@ -650,7 +651,7 @@ table{
     padding:32px;
     border-radius: 100px;
     border:4px solid #333539;
-    background-color: #252729;
+    background-color: #201F1F;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -676,7 +677,7 @@ table{
 }
 
 .voice_chat{
-    background-color: #252729;
+    background-color: #201F1F;
     display: flex;
     position: absolute;
     padding:5px 13px;
@@ -729,7 +730,7 @@ table{
 
 .file_message{
     width: auto;
-    background: #252729;
+    background: #201F1F;
     display: inline-flex;
     gap:8px;
     align-items: center;
@@ -772,7 +773,7 @@ table{
 .file_holding{
     width:100%;
     height:64px;
-    background-color: #252729;
+    background-color: #201F1F;
     border-radius: 16px;
     display: none;
 }
@@ -829,13 +830,14 @@ table{
     position: fixed;
     top:0;
     left:0;
-    background-color: #252729;
+    background-color: #201F1F;
     width:250px;
     height:100vh;
     padding:16px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    gap:8px
 }
 
 .chat_history:hover .past_chats{
@@ -863,11 +865,24 @@ table{
     display: flex;
     align-items: center;
     background-color: white;
-    border-radius: 16px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 16px;
     padding:4px 9px;
     transition: .2s filter;
+    width: 100%;
+    height:36px;
+    justify-content: center;
+    transition: .2s;
+}
+
+.history_title > button > span{
+    margin-top:1px
+}
+
+.history_title > button:active{
+    filter: brightness(90%);
+    scale: .99;
 }
 
 .history_title > button:hover{
@@ -908,7 +923,7 @@ table{
 }
 
 .current_chat{
-    background: #34373A;
+    background: #313131;
     color: #fff;
 
 }
@@ -922,6 +937,10 @@ table{
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    font-size: 16px;
+    padding:4px 0px;
+    box-sizing: border-box;
+    margin-top:1px;
 }
 
 .history_element:hover button{
@@ -959,7 +978,7 @@ table{
     display: flex;
     align-items: center;
     gap:8px;
-    background-color: #34373A;
+    background-color: #313131;
     padding: 8px;
     color: #f0f0f0;
     border:none;
@@ -1001,7 +1020,7 @@ table{
 .sidebar_buttons > button, .sidebar_buttons > a{
     width: 100%;
     height:32px;
-    background-color: #34373A;
+    background-color: #313131;
     border:none;
     border-radius: 8px;
     display: flex;
@@ -1141,4 +1160,23 @@ table{
 
 .wanning_button{
     background-color: #D1AD82;
+}
+
+.download_bar{
+    width:70%;
+    max-width: 400px;
+    background:#323538;
+    height:4px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top:16px;
+    display: none;
+}
+
+.download_bar > span{
+    width: 50%;
+    height: 100%;
+    background-color: #D1AD82;
+    display: block;
+    border-radius: 8px;
 }
