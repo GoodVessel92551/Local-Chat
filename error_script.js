@@ -7,7 +7,7 @@ const download_bar_progress = document.getElementById("download_bar_progress")
 
 document.addEventListener("DOMContentLoaded", async () => {
     try{
-        var capabilities = await ai.assistant.capabilities();
+        var capabilities = await ai.languageModel.capabilities();
     }catch{
         error.style.display = "flex"
     }

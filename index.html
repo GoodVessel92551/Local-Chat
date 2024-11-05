@@ -12,6 +12,7 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
     <meta charset="UTF-8">
+    <meta http-equiv="origin-trial" content="AjiNdyXRbj4usAaAh+UzbhMmDPnl/zmKxutZxDVYwib0NN7SPMViH9tOEqJg0HFV+xrTkNdk5vYiH/KSEYXVCgIAAABceyJvcmlnaW4iOiJodHRwczovL2FpLmJvb29nbGUuYXBwOjQ0MyIsImZlYXR1cmUiOiJMYW5ndWFnZURldGVjdGlvbkFQSSIsImV4cGlyeSI6MTc0OTU5OTk5OX0=" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
         content="Local Chat allows you to chat with a LLM locally within you browser powered by Google Gemini Nano">
@@ -34,34 +35,30 @@
 <body>
     <div class="welcome" id="welcome">
         <span class="title">
-            <h1>Local Chat</h1>
+            <h1>Hello, How can I help?</h1>
         </span>
         <span class="pre_prompts">
-            <div onclick="sendMessage(this.innerText)">
-                <svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M7 6a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V6Zm1.5 1.5h7v-1h-7v1Z"
-                        fill="#D1A882" />
-                    <path
-                        d="M4 4.5A2.5 2.5 0 0 1 6.5 2H18a2.5 2.5 0 0 1 2.5 2.5v14.25a.75.75 0 0 1-.75.75H5.5a1 1 0 0 0 1 1h13.25a.75.75 0 0 1 0 1.5H6.5A2.5 2.5 0 0 1 4 19.5v-15ZM5.5 18H19V4.5a1 1 0 0 0-1-1H6.5a1 1 0 0 0-1 1V18Z"
-                        fill="#D1A882" />
-                </svg>
-                <p>Help me revise A-Level Physics</p>
+            <div class="local_news" style="height: 320px;" onclick="sendMessage(this.innerText)">
+                <img src="prompt_images/purple.png">
+                <div>
+                    <p class="prompt_type">Local News</p>
+                    <p>Get the latest news from around the world</p>
+                    <button><span>Coming Soon</span></button>
+                </div>
             </div>
             <div onclick="sendMessage(this.innerText)">
-                <svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="m8.316 8.408-.772-1.127C6.59 5.89 7.587 4 9.274 4c.48 0 .945.165 1.318.467l2.581 2.09a9.52 9.52 0 0 1 1.09-.997c.66-.508 1.5-.986 2.43-1.057 2.237-.173 3.909 1.243 4.854 2.326.489.56.587 1.268.378 1.883a2.142 2.142 0 0 1-1.342 1.32l-5.371 1.852-3.162 4.217a2.249 2.249 0 0 1-4.006-1.781l.251-1.284-2.53.547A2.283 2.283 0 0 1 3 11.35V7.69a1.691 1.691 0 0 1 3.176-.81l.966 1.772 1.174-.245Zm.465-1.974 1.126 1.643 1.898-.396c.09-.019.18-.048.266-.087L9.65 5.633a.597.597 0 0 0-.868.8Zm8.027-.436c-.507.04-1.068.317-1.629.75-.549.423-1.027.94-1.36 1.34-.42.507-1.006.915-1.708 1.062l-5.208 1.085a.75.75 0 0 1-.811-.375L4.859 7.6a.191.191 0 0 0-.359.092v3.659c0 .499.46.87.949.765l3.643-.786a.75.75 0 0 1 .894.877l-.47 2.4a.749.749 0 0 0 1.334.594l3.3-4.4a.75.75 0 0 1 .355-.26l5.589-1.927a.644.644 0 0 0 .41-.385.4.4 0 0 0-.087-.413c-.853-.977-2.099-1.934-3.61-1.818ZM3.75 19.5a.75.75 0 0 0 0 1.5h16.5a.75.75 0 0 0 0-1.5H3.75Z"
-                        fill="#B882D1" />
-                </svg>
-                <p>Help me plan a trip to London</p>
+                <img src="prompt_images/blue.png">
+                <div>
+                    <p class="prompt_type">Developer</p>
+                    <p>Code a bubble sort on python</p>
+                </div>
             </div>
             <div onclick="sendMessage(this.innerText)">
-                <svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M5.25 4h13.5a3.25 3.25 0 0 1 3.245 3.066L22 7.25v9.5a3.25 3.25 0 0 1-3.066 3.245L18.75 20H5.25a3.25 3.25 0 0 1-3.245-3.066L2 16.75v-9.5a3.25 3.25 0 0 1 3.066-3.245L5.25 4h13.5-13.5ZM20.5 9.373l-8.15 4.29a.75.75 0 0 1-.603.043l-.096-.042L3.5 9.374v7.376a1.75 1.75 0 0 0 1.606 1.744l.144.006h13.5a1.75 1.75 0 0 0 1.744-1.607l.006-.143V9.373ZM18.75 5.5H5.25a1.75 1.75 0 0 0-1.744 1.606L3.5 7.25v.429l8.5 4.473 8.5-4.474V7.25a1.75 1.75 0 0 0-1.607-1.744L18.75 5.5Z"
-                        fill="#D18282" />
-                </svg>
-                <p>Write a email about a meeting tomorrow</p>
+                <img src="prompt_images/yellow.png">
+                <div>
+                    <p class="prompt_type">Cook</p>
+                    <p>Give me a recipe to make bread.</p>
+                </div>
             </div>
         </span>
     </div>

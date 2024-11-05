@@ -37,7 +37,7 @@ const clear = () => {
 
 document.addEventListener("DOMContentLoaded", async () => {
     try{
-        var capabilities = await ai.assistant.capabilities();
+        var capabilities = await ai.languageModel.capabilities();
     }catch{
         console.error("No AI")
         window.location.href = "/error.html"
@@ -147,7 +147,7 @@ const load_model = async () => {
     }else{
         model_new_chat = false
     }
-    model = await ai.assistant.create({
+    model = await ai.languageModel.create({
         systemPrompt: "Your name is Local Chat",
         monitor(m) {
             m.addEventListener("downloadprogress", e => {
@@ -546,3 +546,32 @@ const new_chat = () => {
 
 
 load_messages()
+
+
+function extractUsefulText(url) {
+    return new Promise((resolve, reject) => {
+      fetch(url)
+        .then(response => response.text())
+        .then(html => {
+          // Create a DOM element to parse the HTML
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+  
+          // Select elements that likely contain useful text (adjust selectors as needed)
+          const textElements = doc.querySelectorAll('p, h1, h2, h3, h4, h5, h6, li, span');
+  
+          // Extract text from selected elements and filter out unwanted content
+          const extractedText = Array.from(textElements)
+            .map(element => element.textContent)
+            .filter(text => {
+              // Add your filtering criteria here, e.g., remove stop words, punctuation, etc.
+              return text.trim() !== '';
+            });
+  
+          resolve(extractedText.join(' '));
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
+  }
