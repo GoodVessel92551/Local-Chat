@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }catch{
         error.style.display = "flex"
     }
-    capabilities.available == "after-download"
     if(capabilities.available == "readily") window.location.href = "/"
     if (capabilities.available == "after-download")  download.style.display = "flex"
     else error.style.display = "flex"
