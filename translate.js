@@ -24,4 +24,11 @@
           'en'
         )}`;
       });
+
+      const languageTagToHumanReadable = (languageTag, targetLanguage) => {
+        const displayNames = new Intl.DisplayNames([targetLanguage], {
+          type: 'language',
+        });
+        return displayNames.of(languageTag);
+      };
   })();
