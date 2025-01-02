@@ -23,7 +23,7 @@
     <script type="module" src="https://cdn.jsdelivr.net/npm/zero-md@3?register"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
         <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
@@ -38,22 +38,22 @@
             <h1>Hello, How can I help?</h1>
         </span>
         <span class="pre_prompts">
-            <div class="local_news" style="height: 320px;" onclick="sendMessage(this.innerText)">
+            <div class="local_news" style="height: 320px;" onclick="sendMessage('Give me a news round up.')">
                 <img src="prompt_images/purple.png">
                 <div>
-                    <p class="prompt_type">Local News</p>
+                    <p class="prompt_type">News</p>
                     <p>Get the latest news from around the world</p>
-                    <button><span>Coming Soon</span></button>
+                    <button><span>Try Now</span></button>
                 </div>
             </div>
-            <div onclick="sendMessage(this.innerText)">
+            <div onclick="sendMessage('Code a bubble sort on python')">
                 <img src="prompt_images/blue.png">
                 <div>
                     <p class="prompt_type">Developer</p>
                     <p>Code a bubble sort on python</p>
                 </div>
             </div>
-            <div onclick="sendMessage(this.innerText)">
+            <div onclick="sendMessage('Give me a recipe to make bread.')">
                 <img src="prompt_images/yellow.png">
                 <div>
                     <p class="prompt_type">Cook</p>
@@ -61,6 +61,19 @@
                 </div>
             </div>
         </span>
+        <div class="pastChats">
+            <div class="pinned_chats">
+                <span>
+                    <img src="images/Past_Chats_Images/Gradient Blue.png">
+                </span>
+                <span>
+                    <img src="images/Past_Chats_Images/Gradient Yellow.png">
+                </span>
+                <span>
+                    <img src="images/Past_Chats_Images/Gradient Pink.png">
+                </span>
+            </div>
+        </div>
     </div>
     <div class="container">
         <div class="choseModelContainer" id="choseModelContainer" style="display: none;">

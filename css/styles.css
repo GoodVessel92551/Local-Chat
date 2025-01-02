@@ -4,7 +4,7 @@ html,body{
     background:#223039;
     display: flex;
     justify-content: center;
-    font-family: "League Spartan", system-ui;
+    font-family: "Lexend", serif;
 }
 
 ::-webkit-scrollbar {
@@ -25,7 +25,7 @@ html,body{
 }
 
 *{
-    font-family: "League Spartan", system-ui !important;
+    font-family: "Lexend", serif !important;
     vertical-align: sub;
 }
 
@@ -47,10 +47,12 @@ html,body{
     position: absolute;
     flex-direction: column;
     align-items: center;
-    top:300px;
+    top:100px;
     left:calc(50% + 125px);
     transform: translateX(-50%);
     z-index: 5;
+    overflow: hidden;
+    max-height: 800px;
 }
 
 .error_page_logo{
@@ -197,7 +199,6 @@ h1{
     height:40px;
     box-sizing: border-box;
     font-size: 16px;
-    padding-top:12px;
 }
 
 .lower_buttons > .buttons> input::placeholder{
@@ -491,24 +492,21 @@ h1{
 }
 
 .pre_prompts > div > div{
-    margin-top:auto;
     display: flex;
     flex-direction: column;
     gap:8px;
-    margi: 8px;
+    margin: 8px;
+    margin-top:auto;
 }
 
 .pre_prompts > div > div > button{
-    display: block;
+    display: flex;
     max-width: fit-content;
     padding:8px;
     color:#4A4A4A;
     border:none;
     border-radius: 16px; 
-}
-
-.pre_prompts > div > div > button > span{
-    padding-top:-2px;
+    font-size: 14px;
 }
 
 .local_news{
@@ -517,7 +515,7 @@ h1{
 }
 
 .local_news > div > p:not(.prompt_type){
-    font-size: 24px;
+    font-size: 20px;
 }
 
 .local_news > div{
@@ -530,11 +528,12 @@ h1{
 
 .prompt_type{
     color:#9F9F9F;
-    font-size: 14px;
+    font-size: 12px !important;
 }
 
 .pre_prompts > div > div > p{
     margin:0px;
+    font-size: 14px;
 }
 
 .pre_prompts > div:not(.local_news) > img{
@@ -928,9 +927,6 @@ table{
     transition: .2s;
 }
 
-.history_title > button > span{
-    margin-top:1px
-}
 
 .history_title > button:active{
     filter: brightness(90%);
@@ -965,7 +961,7 @@ table{
 .history_element{
     color:#C3C3C3;
     padding:9px 0px;
-    font-size: 16px;
+    font-size: 14px;
     display: flex;
     cursor: pointer;
     border-radius: 8px;
@@ -989,10 +985,9 @@ table{
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 16px;
+    font-size: 14px;
     padding:4px 0px;
     box-sizing: border-box;
-    margin-top:1px;
 }
 
 .history_element:hover button{
@@ -1231,4 +1226,117 @@ table{
     background-color: #D1AD82;
     display: block;
     border-radius: 8px;
+}
+
+.pastChats{
+    display: none !important;
+    width: 100%;
+    height: 152px;
+    background-color: #3e4f58;
+    margin-top:16px;
+    border-radius: 32px;
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.pastChats:hover{
+    transform: translateY(-320px);
+    height: 900px;
+    margin-top: 0px;
+}
+
+.pinned_chats{
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    height:136px;
+}
+
+.pastChats > .pinned_chats > span{
+    object-fit: cover;
+    border-radius: 16px;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.pastChats> .pinned_chats > span > img{
+    object-fit: cover;
+    border-radius: 16px;
+    width: 100%;
+    height: 100%;
+}
+
+.newsContainer{
+    width: calc(100% - 40px);
+    margin-left: 40px;
+}
+
+.newsReports{
+    overflow-x: scroll;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    text-decoration: none !important;
+    box-sizing: border-box;
+    padding-bottom: 8px;
+    margin-top: 16px;
+}
+
+.newsContainerTitle{
+    color: #f0f0f0;
+    font-size: 14px;
+    margin: 0px;
+    display: flex;
+    gap:8px;
+}
+
+.newsContainerTitle > span{
+    background-color: #5D7A8A;
+    color: #E7F6FF;
+    font-weight: normal;
+    padding:2px 7px;
+    font-size: 11px;
+    border-radius: 4px;
+}
+
+
+
+.newsReports > a{
+    background-color: #3e4f58;
+    border-radius: 16px;
+    min-width: 300px;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    text-decoration: none !important;
+    height: 200px;
+    gap:8px;
+}
+
+.newsReports > a > img{
+    width: 100%;
+    height: 128px;
+    object-fit: cover;
+}
+
+.newsReports > a > p{
+    font-size: 14px;
+    color: #f0f0f0 !important;
+    margin: 8px;
+    text-decoration: none !important;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+}
+
+a {
+    text-decoration: none;
 }
