@@ -17,6 +17,19 @@ let messages = [];
 let model = null;
 const ai_guide = document.getElementById('ai_guide');
 
+
+const getNews = async () => {
+    try {
+        const response = await fetch('https://api.booogle.app/api');
+        const data = await response.json();
+        return data; // Return the data
+    } catch (error) {
+        console.error(error); // Log any errors
+        throw error; // Re-throw the error for further handling
+    }
+};
+
+
 const google_bot = () => {
     return /Googlebot|Googlebot-Mobile|Googlebot-Image|AdsBot-Google/i.test(navigator.userAgent);
 }
@@ -148,7 +161,7 @@ const load_model = async () => {
         model_new_chat = false
     }
     model = await ai.languageModel.create({
-        systemPrompt: "Your name is Local Chat",
+        systemPrompt: "Your name is Local Chat and you a AI that runs local respond to the user correctly and informatively but stay concise.",
         monitor(m) {
             m.addEventListener("downloadprogress", e => {
               console.log(`Downloaded ${e.loaded} of ${e.total} bytes.`);
@@ -172,6 +185,8 @@ const ai_call = async (userInput, messages) => {
     var position = document.createElement("span");
     var link = document.createElement("link");
     var link2 = document.createElement("link");
+    var newsReports = document.createElement("div");
+    newsReports.classList.add("newsReports");
     link.rel = "stylesheet";
     link2.rel = "stylesheet";
     link.href = "https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown-dark.min.css";
@@ -235,10 +250,28 @@ const ai_call = async (userInput, messages) => {
     position.innerHTML = `<svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8.664 15.735c.245.173.537.265.836.264v-.004a1.442 1.442 0 0 0 1.327-.872l.613-1.864a2.872 2.872 0 0 1 1.817-1.812l1.778-.578a1.443 1.443 0 0 0-.052-2.74l-1.755-.57a2.876 2.876 0 0 1-1.822-1.823l-.578-1.777a1.446 1.446 0 0 0-2.732.022l-.583 1.792a2.877 2.877 0 0 1-1.77 1.786l-1.777.571a1.444 1.444 0 0 0 .017 2.734l1.754.569a2.887 2.887 0 0 1 1.822 1.826l.578 1.775c.099.283.283.528.527.7Zm-.374-4.25a4.054 4.054 0 0 0-.363-.413h.003a4.394 4.394 0 0 0-1.72-1.063l-1.6-.508 1.611-.524a4.4 4.4 0 0 0 1.69-1.065 4.448 4.448 0 0 0 1.041-1.708l.515-1.582.516 1.587a4.374 4.374 0 0 0 2.781 2.773l1.62.522-1.59.515a4.379 4.379 0 0 0-2.774 2.775l-.515 1.582-.515-1.585a4.368 4.368 0 0 0-.7-1.306Zm8.041 9.297a1.123 1.123 0 0 1-.41-.549l-.328-1.007a1.293 1.293 0 0 0-.821-.823l-.991-.323A1.148 1.148 0 0 1 13 16.997a1.143 1.143 0 0 1 .771-1.08l1.006-.326a1.3 1.3 0 0 0 .8-.819l.324-.992a1.143 1.143 0 0 1 2.157-.021l.329 1.014a1.3 1.3 0 0 0 .82.816l.992.323a1.141 1.141 0 0 1 .039 2.165l-1.014.329a1.3 1.3 0 0 0-.818.822l-.322.989c-.078.23-.226.43-.425.57a1.14 1.14 0 0 1-1.328-.005Zm-1.03-3.783A2.789 2.789 0 0 1 17 18.708a2.794 2.794 0 0 1 1.7-1.7 2.813 2.813 0 0 1-1.718-1.708A2.806 2.806 0 0 1 15.3 17Z" fill="#ffffff"/></svg>Generating`
     var stream
     console.log(model_new_chat)
-    if (PDF_content == "" && model_new_chat) {
+    var newsdata 
+    if (PDF_content == "" && model_new_chat && !userInput.toLowerCase().includes("news")) {
         console.log("1")
         stream = model.promptStreaming(userInput.trim());
-    }else if(PDF_content != "" && model_new_chat){
+    }else if (userInput.toLowerCase().includes("news") && model_new_chat) {
+        await getNews().then(data => {
+            newsdata = data
+            stream = model.promptStreaming(`Latest News Reports make sure to only use data given to you and also make sure that you dont mix reports but you can report on multiple at a time do not use links: ${JSON.stringify(data)}\n\n${userInput.trim()}`);
+        }).catch(error => {
+            console.log("Error fetching news:", error);
+        });
+    }else if (userInput.toLowerCase().includes("news") && !model_new_chat) {
+        await getNews().then(data => {
+            newsdata = data
+            stream = model.promptStreaming(`Latest News Reports make sure to only use data given to you and also make sure that you dont mix reports but you can report on multiple at a time do not use links: ${JSON.stringify(data)}. ${messages.map((message) => `${message.role}: ${message.content}`).join("\n")}\n user: ${userInput.trim()}\n assistant:`);
+        }).catch(error => {
+            console.log("Error fetching news:", error);
+        });
+    }
+    
+    
+    else if(PDF_content != "" && model_new_chat){
         console.log("2")
         stream = model.promptStreaming(`${PDF_content.substring(0, 3000)}\n\n${userInput.trim()}`);
     }else if(PDF_content == "" && model_new_chat){
@@ -248,12 +281,11 @@ const ai_call = async (userInput, messages) => {
         console.log("4")
         stream = model.promptStreaming(`${PDF_content.substring(0, 3000)}. ${messages.map((message) => `${message.role}: ${message.content}`).join("\n")}\n user: ${userInput.trim()}\n assistant:`);
     }
-    
     const generate = async () => {
         for await (const response of stream) {
-            script.textContent = response;
+            script.textContent += response;
             tokens += 1;
-            total = response;
+            total += response;
             var current_time = new Date();
             var current_time_taken = current_time - startTime;
             if (current_time_taken != undefined) {
@@ -267,10 +299,59 @@ const ai_call = async (userInput, messages) => {
         }
     }
     await generate();
+    if (newsdata != undefined) {
+        var newsContainerTitle = document.createElement("strong");
+        var newsContainer = document.createElement("div");
+        newsContainerTitle.innerHTML = "News Reports <span>Beta</span>";
+        newsContainerTitle.classList.add("newsContainerTitle");
+        newsContainer.classList.add("newsContainer");
+        newsContainer.appendChild(newsContainerTitle);
+        messageContainer.appendChild(newsContainer);
+        var rendedSources = []
+        async function renderNews() {
+            for (const element of newsdata.Latest) {
+                if (rendedSources.includes(element.title)) {
+                    continue;
+                }
+                rendedSources.push(element.title);
+                var newsReport = document.createElement("a");
+                newsReport.classList.add("newsReport");
+                var newsImage = document.createElement("img");
+                var newsTitle = document.createElement("p");
+                console.log(element.image_link);
+                if (element.image_link == null) {
+                    newsImage.src = "/images/placeholder.png";
+                } else {
+                    newsImage.src = element.image_link;
+                }
+                newsTitle.innerText = element.title;
+                newsReport.href = element.news_link;
+                newsReport.target = "_blank";
+                newsReport.appendChild(newsImage);
+                newsReport.appendChild(newsTitle);
+                newsReports.appendChild(newsReport);
+        
+                // Wait for 1 second before processing the next element
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+        
+            newsContainer.appendChild(newsReports);
+        }
+        
+        renderNews();
+    
+        newsContainer.appendChild(newsReports);
+    }
     messages.push({ "role": "user", "content": userInput });
     messages.push({ "role": "assistant", "content": total });
+    var extra = ""
+    if (PDF_content != "") {
+        extra = {"pdf":PDF_content,"file_name":fileName}
+    }else if(userInput.toLowerCase().includes("news")){
+        extra = {"news":newsdata}
+    }
     var history = JSON.parse(localStorage.getItem("history"))
-    history["chats"][history.current_chat_id] = messages
+    history["chats"][history.current_chat_id] = {"messages":messages,"extra":extra}
     localStorage.setItem("history", JSON.stringify(history))
     update_history()
 
@@ -359,7 +440,7 @@ fileReader.onload = function() {
     });
 };
 
-const appendMessage_ai = (message) => {
+const appendMessage_ai = (message,extra,humanMessage) => {
     let title = document.createElement("div");
     let icon = document.createElement("span");
     let name_type = document.createElement("type");
@@ -367,6 +448,8 @@ const appendMessage_ai = (message) => {
     var position = document.createElement("span");
     var link = document.createElement("link");
     var link2 = document.createElement("link");
+    var newsReports = document.createElement("div");
+    newsReports.classList.add("newsReports");
     link.rel = "stylesheet";
     link2.rel = "stylesheet";
     link.href = "https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown-dark.min.css";
@@ -403,7 +486,6 @@ const appendMessage_ai = (message) => {
     template.content.appendChild(link);
     template.content.appendChild(link2);
     template.content.appendChild(style);
-
     const script = document.createElement('script');
     script.setAttribute('type', 'text/markdown');
     script.setAttribute('id', 'output');
@@ -429,6 +511,45 @@ const appendMessage_ai = (message) => {
     position.innerHTML = `<svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4.53 12.97a.75.75 0 0 0-1.06 1.06l4.5 4.5a.75.75 0 0 0 1.06 0l11-11a.75.75 0 0 0-1.06-1.06L8.5 16.94l-3.97-3.97Z" fill="#ffffff"/></svg>Complete`
     position.classList.remove("genning");
     position.classList.add("done");
+    if(humanMessage.toLowerCase().includes("news")){
+        var newsContainerTitle = document.createElement("strong");
+        var newsContainer = document.createElement("div");
+        newsContainerTitle.innerHTML = "News Reports <span>Beta</span>";
+        newsContainerTitle.classList.add("newsContainerTitle");
+        newsContainer.classList.add("newsContainer");
+        newsContainer.appendChild(newsContainerTitle);
+        messageContainer.appendChild(newsContainer);
+
+        var newsdata = extra["news"]
+        if (newsdata != undefined) {
+            var rendedSources = []
+            newsdata.Latest.forEach(element => {
+                if (rendedSources.includes(element.title)) {
+                    return
+                }
+                rendedSources.push(element.title)
+                var newsReport = document.createElement("a");
+                newsReport.classList.add("newsReport");
+                var newsImage = document.createElement("img");
+                var newsTitle = document.createElement("p");
+                console.log(element.image_link)
+                if (element.image_link == null) {
+                    newsImage.src = "/images/placeholder.png";
+                }else{
+                    newsImage.src = element.image_link;
+                }
+                newsTitle.innerText = element.title;
+                newsReport.href = element.news_link;
+                newsReport.target = "_blank";
+                newsReport.appendChild(newsImage);
+                newsReport.appendChild(newsTitle);
+                newsReports.appendChild(newsReport);
+                
+            });
+        
+            newsContainer.appendChild(newsReports);
+        }
+    }
 }
 
 const load_messages = () => {
@@ -438,14 +559,18 @@ const load_messages = () => {
         chat_id = history.chat_id;
         chats = history.chats;
         current_chat = chats[current_chat_id];
+        extra = current_chat.extra
         if ((current_chat != undefined) && (Object.keys(current_chat).length != 0)){
-            messages = current_chat;
+            messages = current_chat.messages;
             welcome.style.display = "none"
-            current_chat.forEach(element => {
+            var lastUserMessage = ""
+            current_chat.messages.forEach(element => {
                 if (element.role == "user") {
+                    lastUserMessage = element.content
                     appendMessage(element.content, "user");
+
                 } else {
-                    appendMessage_ai(element.content);
+                    appendMessage_ai(element.content,extra,lastUserMessage);
                 }
             });
         }
@@ -480,7 +605,8 @@ const update_history = () => {
 
         delete_button.innerHTML = '<svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 1.75a3.25 3.25 0 0 1 3.245 3.066L15.25 5h5.25a.75.75 0 0 1 .102 1.493L20.5 6.5h-.796l-1.28 13.02a2.75 2.75 0 0 1-2.561 2.474l-.176.006H8.313a2.75 2.75 0 0 1-2.714-2.307l-.023-.174L4.295 6.5H3.5a.75.75 0 0 1-.743-.648L2.75 5.75a.75.75 0 0 1 .648-.743L3.5 5h5.25A3.25 3.25 0 0 1 12 1.75Zm6.197 4.75H5.802l1.267 12.872a1.25 1.25 0 0 0 1.117 1.122l.127.006h7.374c.6 0 1.109-.425 1.225-1.002l.02-.126L18.196 6.5ZM13.75 9.25a.75.75 0 0 1 .743.648L14.5 10v7a.75.75 0 0 1-1.493.102L13 17v-7a.75.75 0 0 1 .75-.75Zm-3.5 0a.75.75 0 0 1 .743.648L11 10v7a.75.75 0 0 1-1.493.102L9.5 17v-7a.75.75 0 0 1 .75-.75Zm1.75-6a1.75 1.75 0 0 0-1.744 1.606L10.25 5h3.5A1.75 1.75 0 0 0 12 3.25Z" fill="#ffffff"/></svg>'
         if (Object.keys(chats[element]).length != 0){
-            history_title.innerText = chats[element][0].content.substring(0, 40);
+            console.log(chats[element].messages[0].content)
+            history_title.innerText = chats[element].messages[0].content.substring(0, 40);
         }else{
             history_title.innerText = "New Chat"
         }
