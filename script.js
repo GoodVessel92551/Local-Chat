@@ -29,6 +29,17 @@ const getNews = async () => {
     }
 };
 
+const getSearch = async (query) => {
+    try {
+        const response = await fetch(`https://api.booogle.app/search?q=${query}`);
+        const data = await response.json();
+        return data; // Return the data
+    } catch (error) {
+        console.error(error); // Log any errors
+        throw error; // Re-throw the error for further handling
+    }
+}
+
 
 const google_bot = () => {
     return /Googlebot|Googlebot-Mobile|Googlebot-Image|AdsBot-Google/i.test(navigator.userAgent);
@@ -186,7 +197,9 @@ const ai_call = async (userInput, messages) => {
     var link = document.createElement("link");
     var link2 = document.createElement("link");
     var newsReports = document.createElement("div");
+    var searchReports = document.createElement("div");
     newsReports.classList.add("newsReports");
+    searchReports.classList.add("searchReports");
     link.rel = "stylesheet";
     link2.rel = "stylesheet";
     link.href = "https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown-dark.min.css";
@@ -246,15 +259,15 @@ const ai_call = async (userInput, messages) => {
     icon.classList.add("modal");
     icon.innerHTML = '<svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8.664 15.735c.245.173.537.265.836.264v-.004a1.442 1.442 0 0 0 1.327-.872l.613-1.864a2.872 2.872 0 0 1 1.817-1.812l1.778-.578a1.443 1.443 0 0 0-.052-2.74l-1.755-.57a2.876 2.876 0 0 1-1.822-1.823l-.578-1.777a1.446 1.446 0 0 0-2.732.022l-.583 1.792a2.877 2.877 0 0 1-1.77 1.786l-1.777.571a1.444 1.444 0 0 0 .017 2.734l1.754.569a2.887 2.887 0 0 1 1.822 1.826l.578 1.775c.099.283.283.528.527.7Zm7.667 5.047a1.123 1.123 0 0 1-.41-.549l-.328-1.007a1.293 1.293 0 0 0-.821-.823l-.991-.323A1.148 1.148 0 0 1 13 16.997a1.143 1.143 0 0 1 .771-1.08l1.006-.326a1.3 1.3 0 0 0 .8-.819l.324-.992a1.143 1.143 0 0 1 2.157-.021l.329 1.014a1.3 1.3 0 0 0 .82.816l.992.323a1.141 1.141 0 0 1 .039 2.165l-1.014.329a1.3 1.3 0 0 0-.818.822l-.322.989c-.078.23-.226.43-.425.57a1.14 1.14 0 0 1-1.328-.005Z" fill="#ffffff"/></svg>';
     name_type.innerHTML = "Local Chat";
-    position.classList.add("genning");
-    position.innerHTML = `<svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8.664 15.735c.245.173.537.265.836.264v-.004a1.442 1.442 0 0 0 1.327-.872l.613-1.864a2.872 2.872 0 0 1 1.817-1.812l1.778-.578a1.443 1.443 0 0 0-.052-2.74l-1.755-.57a2.876 2.876 0 0 1-1.822-1.823l-.578-1.777a1.446 1.446 0 0 0-2.732.022l-.583 1.792a2.877 2.877 0 0 1-1.77 1.786l-1.777.571a1.444 1.444 0 0 0 .017 2.734l1.754.569a2.887 2.887 0 0 1 1.822 1.826l.578 1.775c.099.283.283.528.527.7Zm-.374-4.25a4.054 4.054 0 0 0-.363-.413h.003a4.394 4.394 0 0 0-1.72-1.063l-1.6-.508 1.611-.524a4.4 4.4 0 0 0 1.69-1.065 4.448 4.448 0 0 0 1.041-1.708l.515-1.582.516 1.587a4.374 4.374 0 0 0 2.781 2.773l1.62.522-1.59.515a4.379 4.379 0 0 0-2.774 2.775l-.515 1.582-.515-1.585a4.368 4.368 0 0 0-.7-1.306Zm8.041 9.297a1.123 1.123 0 0 1-.41-.549l-.328-1.007a1.293 1.293 0 0 0-.821-.823l-.991-.323A1.148 1.148 0 0 1 13 16.997a1.143 1.143 0 0 1 .771-1.08l1.006-.326a1.3 1.3 0 0 0 .8-.819l.324-.992a1.143 1.143 0 0 1 2.157-.021l.329 1.014a1.3 1.3 0 0 0 .82.816l.992.323a1.141 1.141 0 0 1 .039 2.165l-1.014.329a1.3 1.3 0 0 0-.818.822l-.322.989c-.078.23-.226.43-.425.57a1.14 1.14 0 0 1-1.328-.005Zm-1.03-3.783A2.789 2.789 0 0 1 17 18.708a2.794 2.794 0 0 1 1.7-1.7 2.813 2.813 0 0 1-1.718-1.708A2.806 2.806 0 0 1 15.3 17Z" fill="#ffffff"/></svg>Generating`
     var stream
     console.log(model_new_chat)
-    var newsdata 
-    if (PDF_content == "" && model_new_chat && !userInput.toLowerCase().includes("news")) {
+    var newsdata,searchData
+    if (PDF_content == "" && model_new_chat && !userInput.toLowerCase().includes("news") && !userInput.toLowerCase().includes("?")) {
         console.log("1")
         stream = model.promptStreaming(userInput.trim());
     }else if (userInput.toLowerCase().includes("news") && model_new_chat) {
+        position.classList.add("searching");
+        position.innerHTML = '<svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 2.75a7.25 7.25 0 0 1 5.63 11.819l4.9 4.9a.75.75 0 0 1-.976 1.134l-.084-.073-4.901-4.9A7.25 7.25 0 1 1 10 2.75Zm0 1.5a5.75 5.75 0 1 0 0 11.5 5.75 5.75 0 0 0 0-11.5Z" fill="#ffffff"/></svg>Searching'
         await getNews().then(data => {
             newsdata = data
             stream = model.promptStreaming(`Latest News Reports make sure to only use data given to you and also make sure that you dont mix reports but you can report on multiple at a time do not use links: ${JSON.stringify(data)}\n\n${userInput.trim()}`);
@@ -262,14 +275,53 @@ const ai_call = async (userInput, messages) => {
             console.log("Error fetching news:", error);
         });
     }else if (userInput.toLowerCase().includes("news") && !model_new_chat) {
-        await getNews().then(data => {
+        position.classList.add("searching");
+        position.innerHTML = '<svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 2.75a7.25 7.25 0 0 1 5.63 11.819l4.9 4.9a.75.75 0 0 1-.976 1.134l-.084-.073-4.901-4.9A7.25 7.25 0 1 1 10 2.75Zm0 1.5a5.75 5.75 0 1 0 0 11.5 5.75 5.75 0 0 0 0-11.5Z" fill="#ffffff"/></svg>Searching'
+        await getNews(userInput.trim()).then(data => {
             newsdata = data
             stream = model.promptStreaming(`Latest News Reports make sure to only use data given to you and also make sure that you dont mix reports but you can report on multiple at a time do not use links: ${JSON.stringify(data)}. ${messages.map((message) => `${message.role}: ${message.content}`).join("\n")}\n user: ${userInput.trim()}\n assistant:`);
         }).catch(error => {
             console.log("Error fetching news:", error);
         });
     }
-    
+    else if(userInput.includes("?") && model_new_chat){
+        position.classList.add("searching");
+        position.innerHTML = '<svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 2.75a7.25 7.25 0 0 1 5.63 11.819l4.9 4.9a.75.75 0 0 1-.976 1.134l-.084-.073-4.901-4.9A7.25 7.25 0 1 1 10 2.75Zm0 1.5a5.75 5.75 0 1 0 0 11.5 5.75 5.75 0 0 0 0-11.5Z" fill="#ffffff"/></svg>Searching'
+        await getSearch(userInput.trim()).then(data => {
+            console.log(data)
+            searchData = data
+            var promptData
+            searchData.forEach(element => {
+                var content = element.content
+                if (content){
+                    promptData += content
+                }
+            })
+            console.log(promptData)
+            stream = model.promptStreaming(`Here are some search results to help you answering the users question: ${JSON.stringify(promptData)}\n\n${userInput.trim()}`);
+        }).catch(error => {
+            console.log("Error fetching news:", error);
+        });
+    }
+    else if (userInput.includes("?") && !model_new_chat) {
+        position.classList.add("searching");
+        position.innerHTML = '<svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 2.75a7.25 7.25 0 0 1 5.63 11.819l4.9 4.9a.75.75 0 0 1-.976 1.134l-.084-.073-4.901-4.9A7.25 7.25 0 1 1 10 2.75Zm0 1.5a5.75 5.75 0 1 0 0 11.5 5.75 5.75 0 0 0 0-11.5Z" fill="#ffffff"/></svg>Searching'
+        await getSearch().then(data => {
+            console.log(data)
+            searchData = data
+            var promptData
+            searchData.forEach(element => {
+                var content = element.content
+                if (content){
+                    promptData += content
+                }
+            })
+            console.log(promptData)
+            stream = model.promptStreaming(`Here are some search results to help you answering the users question: ${JSON.stringify(promptData)}\n\n${userInput.trim()}`);
+        }).catch(error => {
+            console.log("Error fetching news:", error);
+        });
+    }
     
     else if(PDF_content != "" && model_new_chat){
         console.log("2")
@@ -281,6 +333,9 @@ const ai_call = async (userInput, messages) => {
         console.log("4")
         stream = model.promptStreaming(`${PDF_content.substring(0, 3000)}. ${messages.map((message) => `${message.role}: ${message.content}`).join("\n")}\n user: ${userInput.trim()}\n assistant:`);
     }
+    position.classList.remove("searching");
+    position.classList.add("genning");
+    position.innerHTML = `<svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8.664 15.735c.245.173.537.265.836.264v-.004a1.442 1.442 0 0 0 1.327-.872l.613-1.864a2.872 2.872 0 0 1 1.817-1.812l1.778-.578a1.443 1.443 0 0 0-.052-2.74l-1.755-.57a2.876 2.876 0 0 1-1.822-1.823l-.578-1.777a1.446 1.446 0 0 0-2.732.022l-.583 1.792a2.877 2.877 0 0 1-1.77 1.786l-1.777.571a1.444 1.444 0 0 0 .017 2.734l1.754.569a2.887 2.887 0 0 1 1.822 1.826l.578 1.775c.099.283.283.528.527.7Zm-.374-4.25a4.054 4.054 0 0 0-.363-.413h.003a4.394 4.394 0 0 0-1.72-1.063l-1.6-.508 1.611-.524a4.4 4.4 0 0 0 1.69-1.065 4.448 4.448 0 0 0 1.041-1.708l.515-1.582.516 1.587a4.374 4.374 0 0 0 2.781 2.773l1.62.522-1.59.515a4.379 4.379 0 0 0-2.774 2.775l-.515 1.582-.515-1.585a4.368 4.368 0 0 0-.7-1.306Zm8.041 9.297a1.123 1.123 0 0 1-.41-.549l-.328-1.007a1.293 1.293 0 0 0-.821-.823l-.991-.323A1.148 1.148 0 0 1 13 16.997a1.143 1.143 0 0 1 .771-1.08l1.006-.326a1.3 1.3 0 0 0 .8-.819l.324-.992a1.143 1.143 0 0 1 2.157-.021l.329 1.014a1.3 1.3 0 0 0 .82.816l.992.323a1.141 1.141 0 0 1 .039 2.165l-1.014.329a1.3 1.3 0 0 0-.818.822l-.322.989c-.078.23-.226.43-.425.57a1.14 1.14 0 0 1-1.328-.005Zm-1.03-3.783A2.789 2.789 0 0 1 17 18.708a2.794 2.794 0 0 1 1.7-1.7 2.813 2.813 0 0 1-1.718-1.708A2.806 2.806 0 0 1 15.3 17Z" fill="#ffffff"/></svg>Generating`
     const generate = async () => {
         for await (const response of stream) {
             script.textContent += response;
@@ -341,6 +396,38 @@ const ai_call = async (userInput, messages) => {
         renderNews();
     
         newsContainer.appendChild(newsReports);
+    }else if(searchData != undefined){
+        var searchContainerTitle = document.createElement("strong");
+        var searchContainer = document.createElement("div");
+        searchContainerTitle.innerHTML = "Sources <span>Beta</span>";
+        searchContainerTitle.classList.add("searchContainerTitle");
+        searchContainer.classList.add("searchContainer");
+        searchContainer.appendChild(searchContainerTitle);
+        messageContainer.appendChild(searchContainer);
+        var rendedSources = []
+        async function renderSearch() {
+            for (const element of searchData) {
+                if (rendedSources.includes(element.title)|| element.content == null) {
+                    continue;
+                }
+                rendedSources.push(element.title);
+                var searchReport = document.createElement("a");
+                searchReport.classList.add("newsReport");
+                var searchTitle = document.createElement("p");
+                searchTitle.innerText = element.title;
+                searchReport.href = element.link;
+                searchReport.target = "_blank";
+                searchReport.appendChild(searchTitle);
+                searchReports.appendChild(searchReport);
+        
+                // Wait for 1 second before processing the next element
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+        
+            searchContainer.appendChild(searchReports);
+        }
+        
+        renderSearch();
     }
     messages.push({ "role": "user", "content": userInput });
     messages.push({ "role": "assistant", "content": total });
