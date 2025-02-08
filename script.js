@@ -6,9 +6,13 @@ const welcome = document.getElementById("welcome");
 const clear_button = document.getElementById("clear");
 const past_chats = document.getElementById("past_chats")
 const clear_chats = document.getElementById("clear_chats")
+const thinkingEnabled = document.getElementById("thinkingEnabled")
+
+
 
 var current_chat_id, chat_id, chats,current_chat;
 var PDF_content = ""
+var thinking = false;
 var fileName = ""
 let running = false;
 let message_id = 0;
@@ -17,6 +21,14 @@ let messages = [];
 let model = null;
 const ai_guide = document.getElementById('ai_guide');
 
+thinkingEnabled.addEventListener("click", () => {
+    thinkingEnabled.classList.toggle("thinkingEnabledActive")
+    if(thinkingEnabled.classList.contains("thinkingEnabledActive")){
+        thinking = true
+    }else{
+        thinking = false
+    }
+})
 
 const getNews = async () => {
     try {
@@ -172,12 +184,15 @@ const load_model = async () => {
         model_new_chat = false
     }
     model = await ai.languageModel.create({
-        systemPrompt: "Your name is Local Chat and you a AI that runs local respond to the user correctly and informatively but stay concise.",
+        systemPrompt: "Your name is Local Chat and you a AI that runs local respond to the user correctly and informatively but stay concise. NOTE: you do not have access to update info and time you cant use APIs and you are only a chatbot",
         monitor(m) {
             m.addEventListener("downloadprogress", e => {
               console.log(`Downloaded ${e.loaded} of ${e.total} bytes.`);
             });
           }
+    });
+    thinking_model = await ai.languageModel.create({
+        systemPrompt: "Think aloud about what the user is asking without answering the question come up with possible ways that would help you answer the question do stuff step by step if needed. Explore multiple different answers and branches and think which one is the best. NOTE: you do not have access to update info and time you cant use APIs and you can only chat with the user you can not search stuff and the use can not see the message that you make it is only here to help you later",
     });
 }
 
@@ -185,7 +200,6 @@ const ai_call = async (userInput, messages) => {
     document.getElementById('file_holding').style.display = "none"
     running = true;
     let tokens = 0;
-    let startTime = new Date();
     const prompt = input.value;
     var message = prompt
     let total = ""
@@ -260,7 +274,14 @@ const ai_call = async (userInput, messages) => {
     icon.innerHTML = '<svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8.664 15.735c.245.173.537.265.836.264v-.004a1.442 1.442 0 0 0 1.327-.872l.613-1.864a2.872 2.872 0 0 1 1.817-1.812l1.778-.578a1.443 1.443 0 0 0-.052-2.74l-1.755-.57a2.876 2.876 0 0 1-1.822-1.823l-.578-1.777a1.446 1.446 0 0 0-2.732.022l-.583 1.792a2.877 2.877 0 0 1-1.77 1.786l-1.777.571a1.444 1.444 0 0 0 .017 2.734l1.754.569a2.887 2.887 0 0 1 1.822 1.826l.578 1.775c.099.283.283.528.527.7Zm7.667 5.047a1.123 1.123 0 0 1-.41-.549l-.328-1.007a1.293 1.293 0 0 0-.821-.823l-.991-.323A1.148 1.148 0 0 1 13 16.997a1.143 1.143 0 0 1 .771-1.08l1.006-.326a1.3 1.3 0 0 0 .8-.819l.324-.992a1.143 1.143 0 0 1 2.157-.021l.329 1.014a1.3 1.3 0 0 0 .82.816l.992.323a1.141 1.141 0 0 1 .039 2.165l-1.014.329a1.3 1.3 0 0 0-.818.822l-.322.989c-.078.23-.226.43-.425.57a1.14 1.14 0 0 1-1.328-.005Z" fill="#ffffff"/></svg>';
     name_type.innerHTML = "Local Chat";
     var stream
-    console.log(model_new_chat)
+    let thought = "";
+    if(thinking){
+        position.classList.add("thinking");
+        position.innerHTML = '<svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7.152 3.012c.832-.648 1.92-1.006 3-1.006.647 0 1.17.222 1.567.575.108.095.203.198.288.304.084-.106.18-.209.287-.304.396-.353.92-.575 1.566-.575 1.082 0 2.17.358 3.001 1.006.647.503 1.154 1.198 1.353 2.037.42.07.794.284 1.096.567.48.451.822 1.103 1.038 1.774.218.681.328 1.446.295 2.181-.017.376-.072.76-.178 1.127l.066.03c.37.174.67.447.894.81.425.685.575 1.671.575 2.928 0 1.445-.552 2.426-1.262 3.035a3.447 3.447 0 0 1-1.27.69 5.172 5.172 0 0 1-1.019 2.137c-.723.904-1.846 1.668-3.357 1.668-1.21 0-2.163-.67-2.775-1.31a5.358 5.358 0 0 1-.31-.357 5.36 5.36 0 0 1-.31.356c-.613.642-1.566 1.311-2.776 1.311-1.51 0-2.634-.764-3.357-1.668a5.171 5.171 0 0 1-1.019-2.137 3.447 3.447 0 0 1-1.27-.69c-.71-.61-1.262-1.59-1.262-3.035 0-1.257.15-2.243.575-2.928a2.096 2.096 0 0 1 .96-.84 4.892 4.892 0 0 1-.177-1.127c-.033-.735.076-1.5.295-2.181.215-.67.557-1.323 1.038-1.774a2.122 2.122 0 0 1 1.095-.567c.199-.84.706-1.534 1.353-2.037Zm.921 1.183c-.545.425-.865.991-.865 1.643a.75.75 0 0 1-.987.711c-.138-.046-.282-.035-.491.161-.231.217-.467.61-.636 1.138a4.843 4.843 0 0 0-.225 1.656c.025.556.157 1.018.366 1.33a.752.752 0 0 1 .083.166H6.4a2.85 2.85 0 0 1 2.842 2.642 2 2 0 1 1-1.507.01A1.35 1.35 0 0 0 6.4 12.5H3.8a.7.7 0 0 1-.025 0c-.15.348-.262.949-.262 1.966 0 1.021.372 1.581.74 1.897.402.345.845.435.973.435a.75.75 0 0 1 .75.75c0 .42.232 1.183.76 1.843.509.637 1.233 1.105 2.185 1.105.637 0 1.224-.358 1.69-.846.226-.238.402-.485.518-.685a1.8 1.8 0 0 0 .116-.233l.005-.014V9.25h-.895a2 2 0 1 1 0-1.5h.895V5.212l-.002-.057a3.053 3.053 0 0 0-.18-.904c-.09-.238-.207-.426-.346-.55-.123-.11-.292-.195-.57-.195-.765 0-1.525.258-2.079.69ZM12.763 17v1.718l.005.014c.02.053.058.132.116.233.116.2.292.447.518.685.466.488 1.053.846 1.69.846.953 0 1.676-.468 2.185-1.105.528-.66.76-1.424.76-1.843a.75.75 0 0 1 .75-.75c.128 0 .57-.09.974-.435.367-.316.739-.876.739-1.897 0-1.208-.158-1.83-.349-2.137a.6.6 0 0 0-.26-.245c-.102-.048-.253-.084-.488-.084a.75.75 0 0 1-.625-1.166c.209-.313.341-.774.366-1.33a4.844 4.844 0 0 0-.225-1.656c-.17-.528-.404-.92-.636-1.138-.208-.196-.353-.207-.49-.161a.75.75 0 0 1-.988-.711c0-.652-.32-1.218-.865-1.643-.554-.431-1.313-.69-2.08-.69-.277 0-.446.087-.569.196-.139.124-.255.312-.345.55a3.053 3.053 0 0 0-.18.904 2.056 2.056 0 0 0-.003.057V15.5h.637a1.35 1.35 0 0 0 1.35-1.35v-1.795a2 2 0 1 1 1.5 0v1.795A2.85 2.85 0 0 1 13.4 17h-.637ZM8.5 8a.5.5 0 1 0 0 1 .5.5 0 0 0 0-1ZM8 15.5a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0Zm7-5a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0Z" fill="#ffffff"/></svg>Thinking'
+        thought = "You have reasoned the users question use it to help answer:" + await thinking_model.prompt(userInput.trim());
+        console.log(thought)
+    }
+    let startTime = new Date();
     var newsdata,searchData
     if (PDF_content == "" && model_new_chat && !userInput.toLowerCase().includes("news") && !userInput.toLowerCase().includes("?")) {
         console.log("1")
@@ -284,56 +305,15 @@ const ai_call = async (userInput, messages) => {
             console.log("Error fetching news:", error);
         });
     }
-    else if(userInput.includes("?") && model_new_chat){
-        position.classList.add("searching");
-        position.innerHTML = '<svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 2.75a7.25 7.25 0 0 1 5.63 11.819l4.9 4.9a.75.75 0 0 1-.976 1.134l-.084-.073-4.901-4.9A7.25 7.25 0 1 1 10 2.75Zm0 1.5a5.75 5.75 0 1 0 0 11.5 5.75 5.75 0 0 0 0-11.5Z" fill="#ffffff"/></svg>Searching'
-        await getSearch(userInput.trim()).then(data => {
-            console.log(data)
-            searchData = data
-            var promptData
-            searchData.forEach(element => {
-                var content = element.content
-                if (content){
-                    promptData += content
-                }
-            })
-            console.log(promptData)
-            stream = model.promptStreaming(`Here are some search results to help you answering the users question: ${JSON.stringify(promptData)}\n\n${userInput.trim()}`);
-        }).catch(error => {
-            console.log("Error fetching news:", error);
-        });
-    }
-    else if (userInput.includes("?") && !model_new_chat) {
-        position.classList.add("searching");
-        position.innerHTML = '<svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 2.75a7.25 7.25 0 0 1 5.63 11.819l4.9 4.9a.75.75 0 0 1-.976 1.134l-.084-.073-4.901-4.9A7.25 7.25 0 1 1 10 2.75Zm0 1.5a5.75 5.75 0 1 0 0 11.5 5.75 5.75 0 0 0 0-11.5Z" fill="#ffffff"/></svg>Searching'
-        await getSearch().then(data => {
-            console.log(data)
-            searchData = data
-            var promptData
-            searchData.forEach(element => {
-                var content = element.content
-                if (content){
-                    promptData += content
-                }
-            })
-            console.log(promptData)
-            stream = model.promptStreaming(`Here are some search results to help you answering the users question: ${JSON.stringify(promptData)}\n\n${userInput.trim()}`);
-        }).catch(error => {
-            console.log("Error fetching news:", error);
-        });
-    }
-    
     else if(PDF_content != "" && model_new_chat){
         console.log("2")
         stream = model.promptStreaming(`${PDF_content.substring(0, 3000)}\n\n${userInput.trim()}`);
     }else if(PDF_content == "" && model_new_chat){
-        console.log("3")
-        stream = model.promptStreaming(`${messages.map((message) => `${message.role}: ${message.content}`).join("\n")}\n user: ${userInput.trim()}\n assistant:`);
+        stream = model.promptStreaming(`${thought}\n\n ${messages.map((message) => `${message.role}: ${message.content}`).join("\n")}\n user: ${userInput.trim()}\n assistant:`);
     }else{
-        console.log("4")
-        stream = model.promptStreaming(`${PDF_content.substring(0, 3000)}. ${messages.map((message) => `${message.role}: ${message.content}`).join("\n")}\n user: ${userInput.trim()}\n assistant:`);
+        stream = model.promptStreaming(`${thought}\n\n ${PDF_content.substring(0, 3000)}. ${messages.map((message) => `${message.role}: ${message.content}`).join("\n")}\n user: ${userInput.trim()}\n assistant:`);
     }
-    position.classList.remove("searching");
+    position.classList.remove("thinking");
     position.classList.add("genning");
     position.innerHTML = `<svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8.664 15.735c.245.173.537.265.836.264v-.004a1.442 1.442 0 0 0 1.327-.872l.613-1.864a2.872 2.872 0 0 1 1.817-1.812l1.778-.578a1.443 1.443 0 0 0-.052-2.74l-1.755-.57a2.876 2.876 0 0 1-1.822-1.823l-.578-1.777a1.446 1.446 0 0 0-2.732.022l-.583 1.792a2.877 2.877 0 0 1-1.77 1.786l-1.777.571a1.444 1.444 0 0 0 .017 2.734l1.754.569a2.887 2.887 0 0 1 1.822 1.826l.578 1.775c.099.283.283.528.527.7Zm-.374-4.25a4.054 4.054 0 0 0-.363-.413h.003a4.394 4.394 0 0 0-1.72-1.063l-1.6-.508 1.611-.524a4.4 4.4 0 0 0 1.69-1.065 4.448 4.448 0 0 0 1.041-1.708l.515-1.582.516 1.587a4.374 4.374 0 0 0 2.781 2.773l1.62.522-1.59.515a4.379 4.379 0 0 0-2.774 2.775l-.515 1.582-.515-1.585a4.368 4.368 0 0 0-.7-1.306Zm8.041 9.297a1.123 1.123 0 0 1-.41-.549l-.328-1.007a1.293 1.293 0 0 0-.821-.823l-.991-.323A1.148 1.148 0 0 1 13 16.997a1.143 1.143 0 0 1 .771-1.08l1.006-.326a1.3 1.3 0 0 0 .8-.819l.324-.992a1.143 1.143 0 0 1 2.157-.021l.329 1.014a1.3 1.3 0 0 0 .82.816l.992.323a1.141 1.141 0 0 1 .039 2.165l-1.014.329a1.3 1.3 0 0 0-.818.822l-.322.989c-.078.23-.226.43-.425.57a1.14 1.14 0 0 1-1.328-.005Zm-1.03-3.783A2.789 2.789 0 0 1 17 18.708a2.794 2.794 0 0 1 1.7-1.7 2.813 2.813 0 0 1-1.718-1.708A2.806 2.806 0 0 1 15.3 17Z" fill="#ffffff"/></svg>Generating`
     const generate = async () => {

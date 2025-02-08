@@ -149,7 +149,7 @@ h1{
     justify-content: center;
 }
 
-.lower_buttons > .buttons > button{
+.lower_buttons > .buttons > button:not(.thinkingEnable){
     min-width:32px !important;
     padding: 0px !important;
     height:32px;
@@ -681,6 +681,19 @@ table{
 }
 
 .genning > svg{
+    width: 18px;
+    height: 18px;
+}
+
+.thinking{
+    color:#82d1d1 !important;
+}
+
+.thinking > svg > path{
+    fill: #82d1d1 !important;
+}
+
+.thinking > svg{
     width: 18px;
     height: 18px;
     animation: genning 1s infinite;
@@ -1413,4 +1426,46 @@ a {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+}
+
+.thinkingEnable{
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height:32px;
+    border:none;
+    border-radius: 16px;
+    padding:0px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    border:1px solid #85C3EB;
+    color: #85C3EB;
+}
+
+.thinkingEnable > span{
+    color: #85C3EB;
+}
+
+.thinkingEnable > svg{
+    width: 20px;
+    height: 20px;
+}
+
+.thinkingEnable > svg > path{
+    fill: #85C3EB;
+}
+
+.thinkingEnabledActive{
+    background-color: #85C3EB;
+    color: #223039;
+}
+
+.thinkingEnabledActive > svg > path{
+    fill: #223039;
+}
+
+.thinkingEnabledActive > span{
+    color: #223039;
 }
