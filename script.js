@@ -72,13 +72,6 @@ const clear = () => {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-    try{
-        var capabilities = await ai.languageModel.capabilities();
-    }catch{
-        console.error("No AI")
-        window.location.href = "/error.html"
-    }
-    if (capabilities.available == "no" || capabilities.available == "after-download")window.location.href = "/error.html"
     load_model()
 })
 
@@ -183,7 +176,7 @@ const load_model = async () => {
     }else{
         model_new_chat = false
     }
-    model = await ai.languageModel.create({
+    model = await LanguageModel.create({
         systemPrompt: "Your name is Local Chat and you a AI that runs local respond to the user correctly and informatively but stay concise. NOTE: you do not have access to update info and time you cant use APIs and you are only a chatbot",
         monitor(m) {
             m.addEventListener("downloadprogress", e => {
@@ -191,8 +184,8 @@ const load_model = async () => {
             });
           }
     });
-    thinking_model = await ai.languageModel.create({
-        systemPrompt: "Think aloud about what the user is asking without answering the question come up with possible ways that would help you answer the question do stuff step by step if needed. Explore multiple different answers and branches and think which one is the best. NOTE: you do not have access to update info and time you cant use APIs and you can only chat with the user you can not search stuff and the use can not see the message that you make it is only here to help you later",
+    thinking_model = await LanguageModel.create({
+        systemPrompt: "Think aloud about what the user is asking without answering the question come up with possible ways that would help you answer the question do stuff step by step if needed. Explore multiple different answers and branches and think which one is the best. NOTE: you do not have access to update info and time you cant use APIs and you can only chat with the user you can not search stuff and the use can not see the message that you make it is only here to help you later. Count things if needed, Break down the question/answer into other steps.",
     });
 }
 
